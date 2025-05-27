@@ -23,4 +23,9 @@ public class UsrHomeController {
 		return "usr/home/main";
 	}
 
+	@RequestMapping("usr/test/test")
+	public String test(Model model) {
+
+		return "usr/test/test";
+	}
 }
