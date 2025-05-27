@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.repository.MemberRepository;
+import com.example.demo.vo.ResultData;
+import com.mysql.cj.xdevapi.Result;
 
 @Service
 public class MemberService {
@@ -13,6 +15,14 @@ public class MemberService {
 
 	public MemberService(MemberRepository memberRepository) {
 		this.memberRepository = memberRepository;
+	}
+
+	public ResultData doJoin(String loginId, String loginPw, String name, String nickname, String email) {
+
+		memberRepository.doJoin(loginId, loginPw, name, nickname, email);
+		int id = memberRepository.getLastInsertId();
+
+		return ResultData.from(nickname, email);
 	}
 
 }
