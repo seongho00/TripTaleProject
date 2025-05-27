@@ -13,15 +13,23 @@ public class UsrMemberController {
 	@Autowired
 	private MemberService memberService;
 
+	@RequestMapping("usr/member/developerJoin")
+	public String developerJoin(Model model) {
+
+		return "usr/member/developerJoin";
+	}
+	
 	@RequestMapping("usr/member/join")
 	public String join(Model model) {
 
 		return "usr/member/join";
 	}
 	
-	@RequestMapping("usr/member/login")
-	public String lgoin(Model model) {
+	
+	
+	@RequestMapping("usr/member/findLoginId")
+	public String findLoginId(Model model) {
 
-		return "usr/member/login";
+		return "usr/member/findLoginId";
 	}
 }

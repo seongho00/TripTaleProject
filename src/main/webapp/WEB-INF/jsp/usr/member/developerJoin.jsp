@@ -9,7 +9,7 @@
 		class="flex flex-col justify-start items-center flex-grow-0 flex-shrink-0 h-[611px] w-[510px] overflow-hidden gap-7 py-[7px] rounded-[10px] bg-[#aedff7] border border-black"
 		style="box-shadow: 4px 4px 4px 1px rgba(0, 0, 0, 0.25);">
 		<div class="flex flex-col justify-start items-center flex-grow-0 flex-shrink-0 relative overflow-hidden">
-			<img src="/images/로고.png class="flex-grow-0 flex-shrink-0 w-[109px] h-[76px] object-cover" />
+			<img src="/images/로고.png" class="flex-grow-0 flex-shrink-0 w-[109px] h-[76px] object-cover" />
 			<p class="flex-grow-0 flex-shrink-0 w-[510px] h-[75px] text-5xl text-center text-black">회원가입</p>
 		</div>
 		<div
@@ -30,7 +30,7 @@
 		</div>
 		<div
 			class="flex flex-col flex-grow-0 flex-shrink-0 relative overflow-hidden gap-2.5 rounded-[5px] bg-[#18a0fb]">
-			<a class="flex items-center justify-center  w-80 h-12 text-2xl text-white" href="#">ID / PW 회원가입</a>
+			<a class="flex items-center justify-center  w-80 h-12 text-2xl text-white" href="join">ID / PW 회원가입</a>
 		</div>
 	</div>
 </div>
