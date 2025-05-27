@@ -13,9 +13,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.demo.TripTaleProjectApplication;
 import com.example.demo.service.ArticleService;
 import com.example.demo.vo.Article;
-import com.example.demo.vo.NaverRes;
+import com.example.demo.vo.NaverResponse;
+import com.example.demo.vo.NaverResponse.NaverUserDetail;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,8 +25,14 @@ import jakarta.servlet.http.HttpServletRequest;
 @Controller
 public class UsrHomeController {
 
+	private final TripTaleProjectApplication tripTaleProjectApplication;
+
 	@Autowired
 	private ArticleService articleService;
+
+	UsrHomeController(TripTaleProjectApplication tripTaleProjectApplication) {
+		this.tripTaleProjectApplication = tripTaleProjectApplication;
+	}
 
 	@RequestMapping("usr/home/main")
 	public String main(Model model) {
@@ -78,9 +86,15 @@ public class UsrHomeController {
 
 				String[] str = res.split(",");
 				accessToken = str[0].substring(17, str[0].length() - 1);
-
 				tokenType = str[2].substring(14, str[2].length() - 1);
-
+				String response = test3(accessToken, tokenType);
+				ObjectMapper mapper = new ObjectMapper();
+				System.out.println(response);
+				NaverResponse naverUserInfo = mapper.readValue(response, NaverResponse.class);
+				System.out.println(naverUserInfo);
+				NaverUserDetail naverUserDetail = mapper.readValue(naverUserInfo.getResponse().toString(),
+						NaverUserDetail.class);
+				System.out.println(naverUserDetail);
 			}
 
 		} catch (Exception e) {
@@ -114,14 +128,11 @@ public class UsrHomeController {
 			while ((inputLine = br.readLine()) != null) {
 				response.append(inputLine);
 			}
-			
+
 			br.close();
-//			ObjectMapper mapper = new ObjectMapper();
-//			NaverRes naverUserInfo = mapper.readValue(response.toString(), NaverRes.class);
-//			System.out.println(naverUserInfo);
+
 			return response.toString();
-			
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
