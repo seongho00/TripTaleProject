@@ -114,6 +114,24 @@
 			<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
 		</dependency>
 
+		<!-- 카카오 로그인 -->
+		<!-- WebClient 사용을 위한 의존성 (Spring WebFlux 포함) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+
+		<!-- JSON 응답 파싱용 (선택사항 - Jackson 기본 내장되지만 명시 가능) -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+
+		<!-- Reactor Core (WebClient 내부 사용, 보통 자동 포함되지만 명시 가능) -->
+		<dependency>
+			<groupId>io.projectreactor</groupId>
+			<artifactId>reactor-core</artifactId>
+		</dependency>
 
 	</dependencies>
 

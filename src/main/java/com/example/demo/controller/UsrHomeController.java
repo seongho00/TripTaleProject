@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.TripTaleProjectApplication;
 import com.example.demo.service.ArticleService;
+import com.example.demo.service.KakaoOAuthService;
 import com.example.demo.vo.Article;
 import com.example.demo.vo.NaverResponse;
 import com.example.demo.vo.NaverResponse.NaverUserDetail;
@@ -29,6 +30,8 @@ public class UsrHomeController {
 
 	@Autowired
 	private ArticleService articleService;
+	@Autowired
+	private KakaoOAuthService kakaoOAuthService;
 
 	UsrHomeController(TripTaleProjectApplication tripTaleProjectApplication) {
 		this.tripTaleProjectApplication = tripTaleProjectApplication;
@@ -47,6 +50,20 @@ public class UsrHomeController {
 	public String test(Model model) {
 
 		return "usr/test/test";
+	}
+
+	@RequestMapping("usr/test/kakaoTest")
+	public String kakoDeveloperTest(Model model) {
+
+		return "usr/test/kakaoDeveloperTest";
+	}
+
+	@RequestMapping("oauth/kakao/callback")
+	@ResponseBody
+	public String kakoDeveloperTest(String code) {
+
+		kakaoOAuthService.requestAccessToken(code);
+		return "테스트 성공";
 	}
 
 	@RequestMapping("usr/test/test2")
@@ -138,4 +155,5 @@ public class UsrHomeController {
 		}
 		return null;
 	}
+
 }
