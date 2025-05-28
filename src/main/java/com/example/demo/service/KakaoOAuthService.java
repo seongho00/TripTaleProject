@@ -1,16 +1,10 @@
 package com.example.demo.service;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.util.Map;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class KakaoOAuthService {
 
-	public void requestAccessToken(String authorizationCode) {
+	public String requestAccessToken(String authorizationCode) {
 		// 1. 요청 URL
 		String url = "https://kauth.kakao.com/oauth/token";
 
@@ -49,77 +43,91 @@ public class KakaoOAuthService {
 		ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
 
 		// 6. 응답 출력
-		System.out.println("응답 코드: " + response.getStatusCode());
-		System.out.println("응답 바디: " + response.getBody());
-		parseResponseBody(response.getBody());
-	
+//		System.out.println("응답 코드: " + response.getStatusCode());
+//		System.out.println("응답 바디: " + response.getBody());
+		String accessToken = parseResponseBody(response.getBody());
+		return accessToken;
+
 	}
-	
+
 	public String parseResponseBody(String responseBody) {
-	    try {
-	        ObjectMapper objectMapper = new ObjectMapper();
-	        JsonNode root = objectMapper.readTree(responseBody);
-
-	        String accessToken = root.path("access_token").asText();
-	        String tokenType = root.path("token_type").asText();
-	        String idToken = root.path("id_token").asText();
-	        String scope = root.path("scope").asText();
-	        String refreshToken = root.path("refresh_token").asText();
-	        int expiresIn = root.path("expires_in").asInt();
-	        int refreshTokenExpiresIn = root.path("refresh_token_expires_in").asInt();
-	        
-	        return accessToken;
-	        
-	        
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-		return "";
-	}
-
-	public void requestDate() {
 		try {
-			// 1. 요청 URL
-			URL url = new URL("https://kauth.kakao.com/oauth/token");
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("POST");
-			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
-			conn.setDoOutput(true); // POST 데이터 전송 가능하게 설정
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode root = objectMapper.readTree(responseBody);
 
-			// 2. 파라미터 구성
-			String restApiKey = "여기에_실제_REST_API_KEY";
-			String redirectUri = "http://localhost:8080/oauth/kakao/callback";
-			String code = "여기에_인가_코드";
+			String accessToken = root.path("access_token").asText();
+			String tokenType = root.path("token_type").asText();
+			String idToken = root.path("id_token").asText();
+			String scope = root.path("scope").asText();
+			String refreshToken = root.path("refresh_token").asText();
+			int expiresIn = root.path("expires_in").asInt();
+			int refreshTokenExpiresIn = root.path("refresh_token_expires_in").asInt();
 
-			String params = "grant_type=authorization_code" + "&client_id=" + URLEncoder.encode(restApiKey, "UTF-8")
-					+ "&redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8") + "&code="
-					+ URLEncoder.encode(code, "UTF-8");
+			return accessToken;
 
-			// 3. 요청 본문 전송
-			try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()))) {
-				bw.write(params);
-				bw.flush();
-			}
-
-			// 4. 응답 받기
-			int responseCode = conn.getResponseCode();
-			InputStream inputStream = (responseCode >= 200 && responseCode < 300) ? conn.getInputStream()
-					: conn.getErrorStream();
-
-			BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-			StringBuilder response = new StringBuilder();
-			String line;
-			while ((line = br.readLine()) != null) {
-				response.append(line);
-			}
-
-			System.out.println("응답 코드: " + responseCode);
-			System.out.println("응답 바디: " + response.toString());
-
-			br.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return "";
+	}
+
+	public void getUserInfo(String accessToken) {
+		String url = "https://kapi.kakao.com/v2/user/me?secure_resource=true";
+
+		// 1. 헤더 설정
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBearerAuth(accessToken); // "Authorization: Bearer {토큰}"
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+
+		// 2. RestTemplate으로 GET 요청
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+
+		// 3. 응답 출력
+		System.out.println("응답 상태: " + response.getStatusCode());
+		System.out.println("응답 바디: " + response.getBody());
+		parseUserResponseBody(response.getBody());
+
+	}
+
+	public void parseUserResponseBody(String responseBody) {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode root = objectMapper.readTree(responseBody);
+
+			String id = root.path("id").asText();
+			String connectedAt = root.path("connected_at").asText();
+			String nickname = root.path("properties").path("nickname").asText();
+			System.out.println(id);
+			System.out.println(connectedAt);
+			System.out.println(nickname);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void logout(String accessToken) {
+		String url = "https://kapi.kakao.com/v1/user/logout";
+
+		// 1. 헤더 설정
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED); // Content-Type 지정
+		headers.setBearerAuth(accessToken); // Authorization: Bearer {token}
+
+		// 2. 요청 객체 구성 (POST지만 바디 필요 없음)
+		HttpEntity<String> request = new HttpEntity<>(null, headers);
+
+		// 3. RestTemplate 요청
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
+
+		// 4. 응답 확인
+		System.out.println("응답 코드: " + response.getStatusCode());
+		System.out.println("응답 바디: " + response.getBody());
 	}
 
 }

@@ -62,7 +62,9 @@ public class UsrHomeController {
 	@ResponseBody
 	public String kakoDeveloperTest(String code) {
 
-		kakaoOAuthService.requestAccessToken(code);
+		String accessToken = kakaoOAuthService.requestAccessToken(code);
+		kakaoOAuthService.getUserInfo(accessToken);
+
 		return "테스트 성공";
 	}
 
