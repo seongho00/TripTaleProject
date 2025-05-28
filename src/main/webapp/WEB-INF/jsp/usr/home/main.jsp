@@ -17,6 +17,9 @@
 		aperiam.</div>
 </div>
 
+<a href="../../usr/test/kakaoTest">로그인</a>
+<a href="../../usr/member/doLogout">로그아웃</a>
+
 
 
 <%@ include file="../common/foot.jspf"%>

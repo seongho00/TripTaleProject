@@ -5,14 +5,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.example.demo.service.KakaoOAuthService;
 import com.example.demo.service.MemberService;
 import com.example.demo.vo.ResultData;
+import com.example.demo.vo.Rq;
 
 @Controller
 public class UsrMemberController {
 
 	@Autowired
 	private MemberService memberService;
+	@Autowired
+	private KakaoOAuthService kakaoOAuthService;
+	
+	Rq rq = new Rq();
 
 	@RequestMapping("usr/member/developerJoin")
 	public String developerJoin(Model model) {
@@ -41,5 +47,12 @@ public class UsrMemberController {
 	public String findLoginId(Model model) {
 
 		return "usr/member/findLoginId";
+	}
+
+	@RequestMapping("usr/member/doLogout")
+	public String doLogout(Model model) {
+
+		kakaoOAuthService.doLogout();
+		return "usr/home/main";
 	}
 }

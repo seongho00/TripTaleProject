@@ -19,6 +19,7 @@ import com.example.demo.service.KakaoOAuthService;
 import com.example.demo.vo.Article;
 import com.example.demo.vo.NaverResponse;
 import com.example.demo.vo.NaverResponse.NaverUserDetail;
+import com.example.demo.vo.Rq;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,8 +34,11 @@ public class UsrHomeController {
 	@Autowired
 	private KakaoOAuthService kakaoOAuthService;
 
+	Rq rq;
+
 	UsrHomeController(TripTaleProjectApplication tripTaleProjectApplication) {
 		this.tripTaleProjectApplication = tripTaleProjectApplication;
+		this.rq = new Rq();
 	}
 
 	@RequestMapping("usr/home/main")
@@ -54,18 +58,26 @@ public class UsrHomeController {
 
 	@RequestMapping("usr/test/kakaoTest")
 	public String kakoDeveloperTest(Model model) {
+		String clientId = rq.getClientId();
+
+		String RedirectUri = "http://localhost:8080/oauth/kakao/callback";
+
+		model.addAttribute("clientId", clientId);
+		model.addAttribute("RedirectUri", RedirectUri);
 
 		return "usr/test/kakaoDeveloperTest";
 	}
 
 	@RequestMapping("oauth/kakao/callback")
-	@ResponseBody
 	public String kakoDeveloperTest(String code) {
-
-		String accessToken = kakaoOAuthService.requestAccessToken(code);
+		String clientId = rq.getClientId();
+		String clientSecret = rq.getClientSecret();
+		
+		String accessToken = kakaoOAuthService.requestAccessToken(clientId, code, clientSecret);
+		
 		kakaoOAuthService.getUserInfo(accessToken);
 
-		return "테스트 성공";
+		return "usr/home/main";
 	}
 
 	@RequestMapping("usr/test/test2")
