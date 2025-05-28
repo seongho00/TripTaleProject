@@ -26,9 +26,10 @@ public class Rq {
 
 	private boolean isLogined = false;
 	private int loginedMemberId = 0;
-	private String clientId = "541f86bf90d42b106f889073398e10c1";
-	private String clientSecret = "8kAietvsMC83mkKpHolADKbQWotGGMPU";
-	private String accessToken;
+	private String kakaoClientId = "541f86bf90d42b106f889073398e10c1";
+	private String kakaoClientSecret = "8kAietvsMC83mkKpHolADKbQWotGGMPU";
+	private String kakaoAccessToken;
+	private String kakaoRedirectUri;
 
 	public Rq(HttpServletRequest req, HttpServletResponse resp) {
 		this.req = req;
@@ -73,9 +74,9 @@ public class Rq {
 		session.removeAttribute("loginedMemberId");
 	}
 
-//	public void login(Member member) {
-//		session.setAttribute("loginedMemberId", member.getId());
-//	}
+	public void login(long loginedMemberId) {
+		session.setAttribute("loginedMemberId", loginedMemberId);
+	}
 
 	public void initBeforeActionInterceptor() {
 		System.err.println("initBeforeActionInterceptor 실행됨");

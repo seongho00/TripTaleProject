@@ -17,6 +17,15 @@ String apiURL = "https://nid.naver.com/oauth2.0/authorize?response_type=code" + 
 session.setAttribute("state", state);
 %>
 
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.5/kakao.min.js"
+	integrity="sha384-dok87au0gKqJdxs7msEdBPNnKSRT+/mhTVzq+qOhcL464zXwvcrpjeWvyj1kCdq6" crossorigin="anonymous"></script>
+
+<script>
+	Kakao.init('d7bf7c956990f8ef170f7a8d03a9bf34'); // 사용하려는 앱의 JavaScript 키 입력
+</script>
+
+
+
 
 <div class="flex justify-center w-screen h-screen items-center overflow-hidden gap-2.5 px-[9px] py-[7px] bg-white ">
 	<div
@@ -31,7 +40,12 @@ session.setAttribute("state", state);
 			<a href="<%=apiURL%>">
 				<img class=" w-full h-20" src="/images/네이버 로그인.png" />
 			</a>
-			<img src="카카오톡,-네이버-가입-2.png" class="flex-grow-0 flex-shrink-0 w-80 h-[62px] object-none" />
+			<a id="kakao-login-btn"
+				href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoClientId}&redirect_uri=${kakaoRedirectUri}">
+				<img src="https://k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg" width="222" alt="카카오 로그인 버튼" />
+			</a>
+			<p id="token-result"></p>
+
 		</div>
 		<div class="flex justify-center items-center self-stretch flex-grow-0 flex-shrink-0 relative overflow-hidden gap-2.5">
 			<svg width="177" height="2" viewBox="0 0 177 2" fill="none" xmlns="http://www.w3.org/2000/svg"

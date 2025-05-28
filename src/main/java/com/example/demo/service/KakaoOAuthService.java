@@ -23,7 +23,8 @@ public class KakaoOAuthService {
 	Rq rq = new Rq();
 
 	// 토큰 요청 함수
-	public String requestAccessToken(String clientId, String authorizationCode, String clientSecret) {
+	public String requestAccessToken(String clientId, String authorizationCode, String clientSecret,
+			String redirectUri) {
 		// 1. 요청 URL
 		String url = "https://kauth.kakao.com/oauth/token";
 
@@ -31,7 +32,7 @@ public class KakaoOAuthService {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("grant_type", "authorization_code");
 		params.add("client_id", clientId); // 👉 여기에 실제 REST API 키 입력
-		params.add("redirect_uri", "http://localhost:8080/oauth/kakao/callback");
+		params.add("redirect_uri", redirectUri);
 		params.add("code", authorizationCode);
 		params.add("client_secret", clientSecret); // 👉 클라이언트 시크릿 추가
 
@@ -68,7 +69,7 @@ public class KakaoOAuthService {
 			String refreshToken = root.path("refresh_token").asText();
 			int expiresIn = root.path("expires_in").asInt();
 			int refreshTokenExpiresIn = root.path("refresh_token_expires_in").asInt();
-			rq.setAccessToken(accessToken);
+			rq.setKakaoAccessToken(accessToken);
 			return accessToken;
 
 		} catch (Exception e) {
@@ -93,7 +94,7 @@ public class KakaoOAuthService {
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
 		// 3. 응답 출력
-		System.out.println("응답 상태: " + response.getStatusCode());
+//		System.out.println("응답 상태: " + response.getStatusCode());
 		System.out.println("응답 바디: " + response.getBody());
 		parseUserResponseBody(response.getBody());
 
@@ -108,9 +109,17 @@ public class KakaoOAuthService {
 			String id = root.path("id").asText();
 			String connectedAt = root.path("connected_at").asText();
 			String nickname = root.path("properties").path("nickname").asText();
-//			System.out.println(id);
-//			System.out.println(connectedAt);
-//			System.out.println(nickname);
+			String profileImage = root.path("properties").path("profile_image").asText();
+			String thumbnailImage = root.path("properties").path("thumbnail_image").asText();
+			String email = root.path("kakao_account").path("email").asText();
+
+			rq.login(Long.parseLong(id));
+			System.out.println(id);
+			System.out.println(connectedAt);
+			System.out.println(nickname);
+			System.out.println(profileImage);
+			System.out.println(thumbnailImage);
+			System.out.println(email);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -120,7 +129,7 @@ public class KakaoOAuthService {
 
 	// 카카오 로그아웃
 	public void doLogout() {
-		String accessToken = rq.getAccessToken();
+		String accessToken = rq.getKakaoAccessToken();
 		System.out.println(accessToken);
 		String url = "https://kapi.kakao.com/v1/user/logout";
 

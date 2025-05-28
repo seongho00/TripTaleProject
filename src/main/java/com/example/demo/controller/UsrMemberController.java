@@ -17,11 +17,24 @@ public class UsrMemberController {
 	private MemberService memberService;
 	@Autowired
 	private KakaoOAuthService kakaoOAuthService;
-	
+
 	Rq rq = new Rq();
 
 	@RequestMapping("usr/member/developerJoin")
 	public String developerJoin(Model model) {
+
+		if (rq.isLogined()) {
+
+			return "usr/home/main";
+		}
+
+		String kakaoClientId = rq.getKakaoClientId();
+
+		String kakaoRedirectUri = "http://localhost:8080/usr/member/kakaoCallback";
+		rq.setKakaoRedirectUri(kakaoRedirectUri);
+
+		model.addAttribute("kakaoClientId", kakaoClientId);
+		model.addAttribute("kakaoRedirectUri", kakaoRedirectUri);
 
 		return "usr/member/developerJoin";
 	}
@@ -49,10 +62,37 @@ public class UsrMemberController {
 		return "usr/member/findLoginId";
 	}
 
+	@RequestMapping("usr/member/kakaoLogin")
+	public void kakaoLogin(Model model) {
+		String clientId = rq.getKakaoClientId();
+
+		String RedirectUri = "http://localhost:8080/usr/member/kakaoCallback";
+
+		model.addAttribute("clientId", clientId);
+		model.addAttribute("RedirectUri", RedirectUri);
+
+	}
+
+	@RequestMapping("usr/member/kakaoCallback")
+	public String kakaoCallback(String code) {
+
+		String clientId = rq.getKakaoClientId();
+		String clientSecret = rq.getKakaoClientSecret();
+		String redirectUri = rq.getKakaoRedirectUri();
+		String accessToken = kakaoOAuthService.requestAccessToken(clientId, code, clientSecret, redirectUri);
+
+		kakaoOAuthService.getUserInfo(accessToken);
+
+		return "usr/home/main";
+	}
+
 	@RequestMapping("usr/member/doLogout")
 	public String doLogout(Model model) {
 
-		kakaoOAuthService.doLogout();
+		if (!rq.isLogined()) {
+			kakaoOAuthService.doLogout();
+			rq.setKakaoAccessToken(null);
+		}
 		return "usr/home/main";
 	}
 }

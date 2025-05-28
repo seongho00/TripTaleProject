@@ -56,29 +56,7 @@ public class UsrHomeController {
 		return "usr/test/test";
 	}
 
-	@RequestMapping("usr/test/kakaoTest")
-	public String kakoDeveloperTest(Model model) {
-		String clientId = rq.getClientId();
-
-		String RedirectUri = "http://localhost:8080/oauth/kakao/callback";
-
-		model.addAttribute("clientId", clientId);
-		model.addAttribute("RedirectUri", RedirectUri);
-
-		return "usr/test/kakaoDeveloperTest";
-	}
-
-	@RequestMapping("oauth/kakao/callback")
-	public String kakoDeveloperTest(String code) {
-		String clientId = rq.getClientId();
-		String clientSecret = rq.getClientSecret();
-		
-		String accessToken = kakaoOAuthService.requestAccessToken(clientId, code, clientSecret);
-		
-		kakaoOAuthService.getUserInfo(accessToken);
-
-		return "usr/home/main";
-	}
+	
 
 	@RequestMapping("usr/test/test2")
 	@ResponseBody
