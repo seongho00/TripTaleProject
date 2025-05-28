@@ -33,12 +33,12 @@ public class UsrHomeController {
 	private ArticleService articleService;
 	@Autowired
 	private KakaoOAuthService kakaoOAuthService;
-
+	@Autowired
 	Rq rq;
 
 	UsrHomeController(TripTaleProjectApplication tripTaleProjectApplication) {
 		this.tripTaleProjectApplication = tripTaleProjectApplication;
-		this.rq = new Rq();
+
 	}
 
 	@RequestMapping("usr/home/main")
@@ -55,8 +55,6 @@ public class UsrHomeController {
 
 		return "usr/test/test";
 	}
-
-	
 
 	@RequestMapping("usr/test/test2")
 	@ResponseBody

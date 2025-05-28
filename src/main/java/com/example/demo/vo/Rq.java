@@ -38,16 +38,15 @@ public class Rq {
 
 		if (session.getAttribute("loginedMemberId") != null) {
 			isLogined = true;
-			loginedMemberId = (int) session.getAttribute("loginedMemberId");
+			Object attr = session.getAttribute("loginedMemberId");
+			if (attr instanceof Integer) {
+				loginedMemberId = (Integer) attr;
+			} else if (attr instanceof Long) {
+				loginedMemberId = ((Long) attr).intValue(); // 👈 안전하게 변환
+			}
 		}
 
 		this.req.setAttribute("rq", this);
-	}
-
-	public Rq() {
-		this.req = null;
-		this.resp = null;
-		this.session = null;
 	}
 
 	public void printHistoryBack(String msg) throws IOException {
@@ -85,6 +84,13 @@ public class Rq {
 	public String historyBackOnView(String msg) {
 		req.setAttribute("msg", msg);
 		req.setAttribute("historyBack", true);
+		return "usr/common/js";
+	}
+
+	public String jsReplace(String msg, String replaceLocation) {
+		req.setAttribute("replaceLocation", replaceLocation);
+		req.setAttribute("msg", msg);
+		req.setAttribute("replace", true);
 		return "usr/common/js";
 	}
 

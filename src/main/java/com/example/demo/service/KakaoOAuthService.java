@@ -3,6 +3,7 @@ package com.example.demo.service;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -17,10 +18,13 @@ import com.example.demo.vo.Rq;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Service
 public class KakaoOAuthService {
 
-	Rq rq = new Rq();
+	@Autowired
+	private Rq rq;
 
 	// 토큰 요청 함수
 	public String requestAccessToken(String clientId, String authorizationCode, String clientSecret,
@@ -32,7 +36,7 @@ public class KakaoOAuthService {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("grant_type", "authorization_code");
 		params.add("client_id", clientId); // 👉 여기에 실제 REST API 키 입력
-		params.add("redirect_uri", redirectUri);
+		params.add("redirect_uri", "http://localhost:8080/usr/member/kakaoCallback");
 		params.add("code", authorizationCode);
 		params.add("client_secret", clientSecret); // 👉 클라이언트 시크릿 추가
 
@@ -58,7 +62,9 @@ public class KakaoOAuthService {
 
 	// 토큰 요청 데이터 까보기
 	public String parseResponseBody(String responseBody) {
+
 		try {
+
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode root = objectMapper.readTree(responseBody);
 
@@ -95,7 +101,7 @@ public class KakaoOAuthService {
 
 		// 3. 응답 출력
 //		System.out.println("응답 상태: " + response.getStatusCode());
-		System.out.println("응답 바디: " + response.getBody());
+//		System.out.println("응답 바디: " + response.getBody());
 		parseUserResponseBody(response.getBody());
 
 	}
@@ -103,6 +109,7 @@ public class KakaoOAuthService {
 	// 유저 데이터 까보기
 	public void parseUserResponseBody(String responseBody) {
 		try {
+
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode root = objectMapper.readTree(responseBody);
 
@@ -114,12 +121,12 @@ public class KakaoOAuthService {
 			String email = root.path("kakao_account").path("email").asText();
 
 			rq.login(Long.parseLong(id));
-			System.out.println(id);
-			System.out.println(connectedAt);
-			System.out.println(nickname);
-			System.out.println(profileImage);
-			System.out.println(thumbnailImage);
-			System.out.println(email);
+//			System.out.println(id);
+//			System.out.println(connectedAt);
+//			System.out.println(nickname);
+//			System.out.println(profileImage);
+//			System.out.println(thumbnailImage);
+//			System.out.println(email);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -129,6 +136,7 @@ public class KakaoOAuthService {
 
 	// 카카오 로그아웃
 	public void doLogout() {
+
 		String accessToken = rq.getKakaoAccessToken();
 		System.out.println(accessToken);
 		String url = "https://kapi.kakao.com/v1/user/logout";
@@ -147,8 +155,8 @@ public class KakaoOAuthService {
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
 
 		// 4. 결과 출력
-		System.out.println("응답 코드: " + response.getStatusCode());
-		System.out.println("응답 바디: " + response.getBody());
+//		System.out.println("응답 코드: " + response.getStatusCode());
+//		System.out.println("응답 바디: " + response.getBody());
 	}
 
 }

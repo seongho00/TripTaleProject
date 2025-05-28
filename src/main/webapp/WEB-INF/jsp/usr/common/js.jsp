@@ -4,13 +4,19 @@
 
 <script>
 	let historyBack = '${historyBack} == true';
-
+	let replace = '${historyBack} == true';
+	let replaceLocation = '${replaceLocation}';
 	let msg = '${msg}'.trim();
 
 	if (msg.length > 0) {
 		alert(msg);
 	}
+	if (historyBack) {
 
-	history.back();
+		history.back();
+	}
+	if (replace) {
+		replace(replaceLocation);
+	}
 </script>
 
