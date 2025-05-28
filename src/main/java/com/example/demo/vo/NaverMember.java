@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class NaverResponse {
+public class NaverMember {
 
 	private String resultcode;
 

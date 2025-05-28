@@ -25,11 +25,11 @@ public class Rq {
 	private final HttpSession session;
 
 	private boolean isLogined = false;
-	private int loginedMemberId = 0;
+	private String loginedMemberId = "0";
 	private String kakaoClientId = "541f86bf90d42b106f889073398e10c1";
 	private String kakaoClientSecret = "8kAietvsMC83mkKpHolADKbQWotGGMPU";
-	private String kakaoAccessToken;
-	private String kakaoRedirectUri;
+	private String naverClientId = "5lIc5HiT6OdtWBZYb5k5";
+	private String naverClientSecret = "OhDWVNoA76";
 
 	public Rq(HttpServletRequest req, HttpServletResponse resp) {
 		this.req = req;
@@ -38,12 +38,8 @@ public class Rq {
 
 		if (session.getAttribute("loginedMemberId") != null) {
 			isLogined = true;
-			Object attr = session.getAttribute("loginedMemberId");
-			if (attr instanceof Integer) {
-				loginedMemberId = (Integer) attr;
-			} else if (attr instanceof Long) {
-				loginedMemberId = ((Long) attr).intValue(); // 👈 안전하게 변환
-			}
+			loginedMemberId = session.getAttribute("loginedMemberId").toString();
+
 		}
 
 		this.req.setAttribute("rq", this);
@@ -73,7 +69,7 @@ public class Rq {
 		session.removeAttribute("loginedMemberId");
 	}
 
-	public void login(long loginedMemberId) {
+	public void login(String loginedMemberId) {
 		session.setAttribute("loginedMemberId", loginedMemberId);
 	}
 

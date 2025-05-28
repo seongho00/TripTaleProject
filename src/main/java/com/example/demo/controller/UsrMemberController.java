@@ -1,19 +1,23 @@
 package com.example.demo.controller;
 
+import java.io.UnsupportedEncodingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import com.example.demo.WebMvcConfigurer;
 import com.example.demo.interceptor.BeforeActionInterceptor;
 import com.example.demo.service.KakaoOAuthService;
 import com.example.demo.service.MemberService;
+import com.example.demo.service.NaverOAuthService;
 import com.example.demo.vo.ResultData;
 import com.example.demo.vo.Rq;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 @Controller
 public class UsrMemberController {
+
+	private final WebMvcConfigurer webMvcConfigurer;
 
 	private final BeforeActionInterceptor beforeActionInterceptor;
 
@@ -22,10 +26,13 @@ public class UsrMemberController {
 	@Autowired
 	private KakaoOAuthService kakaoOAuthService;
 	@Autowired
+	private NaverOAuthService naverOAuthService;
+	@Autowired
 	private Rq rq;
 
-	UsrMemberController(BeforeActionInterceptor beforeActionInterceptor) {
+	UsrMemberController(BeforeActionInterceptor beforeActionInterceptor, WebMvcConfigurer webMvcConfigurer) {
 		this.beforeActionInterceptor = beforeActionInterceptor;
+		this.webMvcConfigurer = webMvcConfigurer;
 
 	}
 
@@ -38,7 +45,6 @@ public class UsrMemberController {
 		}
 
 		String kakaoClientId = rq.getKakaoClientId();
-
 		String kakaoRedirectUri = "http://localhost:8080/usr/member/kakaoCallback";
 
 		model.addAttribute("kakaoClientId", kakaoClientId);
@@ -70,15 +76,20 @@ public class UsrMemberController {
 		return "usr/member/findLoginId";
 	}
 
+	@RequestMapping("usr/member/naverCallback")
+	public String naverCallback(String code, String state) throws UnsupportedEncodingException {
+
+		String accessToken = naverOAuthService.requestAccessToken(code, state);
+
+		naverOAuthService.getUserInfo(accessToken);
+
+		return "usr/home/main";
+	}
+
 	@RequestMapping("usr/member/kakaoCallback")
 	public String kakaoCallback(String code) {
 
-		String clientId = rq.getKakaoClientId();
-		String clientSecret = rq.getKakaoClientSecret();
-		String redirectUri = rq.getKakaoRedirectUri();
-		System.out.println(redirectUri);
-		System.out.println(clientId);
-		String accessToken = kakaoOAuthService.requestAccessToken(clientId, code, clientSecret, redirectUri);
+		String accessToken = kakaoOAuthService.requestAccessToken(code);
 
 		kakaoOAuthService.getUserInfo(accessToken);
 
@@ -96,7 +107,20 @@ public class UsrMemberController {
 
 			}
 
+			try {
+				System.out.println("실행됨");
+				return "usr/home/logoutBridge";
+			} catch (Exception e) {
+
+			}
+
 		}
 		return "usr/home/main";
+	}
+
+	@RequestMapping("usr/member/naverLogout")
+	public String naverLogout(Model model) {
+
+		return "redirect:https://nid.naver.com/nidlogin.logout";
 	}
 }

@@ -18,7 +18,7 @@ import com.example.demo.vo.Rq;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Service
 public class KakaoOAuthService {
@@ -27,8 +27,10 @@ public class KakaoOAuthService {
 	private Rq rq;
 
 	// 토큰 요청 함수
-	public String requestAccessToken(String clientId, String authorizationCode, String clientSecret,
-			String redirectUri) {
+	public String requestAccessToken(String authorizationCode) {
+		String clientId = rq.getKakaoClientId();
+		String clientSecret = rq.getKakaoClientSecret();
+
 		// 1. 요청 URL
 		String url = "https://kauth.kakao.com/oauth/token";
 
@@ -75,7 +77,9 @@ public class KakaoOAuthService {
 			String refreshToken = root.path("refresh_token").asText();
 			int expiresIn = root.path("expires_in").asInt();
 			int refreshTokenExpiresIn = root.path("refresh_token_expires_in").asInt();
-			rq.setKakaoAccessToken(accessToken);
+			HttpSession session = (HttpSession) rq.getSession();
+			session.setAttribute("accessToken", accessToken);
+
 			return accessToken;
 
 		} catch (Exception e) {
@@ -120,13 +124,13 @@ public class KakaoOAuthService {
 			String thumbnailImage = root.path("properties").path("thumbnail_image").asText();
 			String email = root.path("kakao_account").path("email").asText();
 
-			rq.login(Long.parseLong(id));
-//			System.out.println(id);
-//			System.out.println(connectedAt);
-//			System.out.println(nickname);
-//			System.out.println(profileImage);
-//			System.out.println(thumbnailImage);
-//			System.out.println(email);
+			rq.login(id);
+			System.out.println(id);
+			System.out.println(connectedAt);
+			System.out.println(nickname);
+			System.out.println(profileImage);
+			System.out.println(thumbnailImage);
+			System.out.println(email);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -136,9 +140,10 @@ public class KakaoOAuthService {
 
 	// 카카오 로그아웃
 	public void doLogout() {
+		HttpSession session = (HttpSession) rq.getSession();
 
-		String accessToken = rq.getKakaoAccessToken();
-		System.out.println(accessToken);
+		String accessToken = (String) session.getAttribute("accessToken");
+
 		String url = "https://kapi.kakao.com/v1/user/logout";
 
 		// 1. 헤더 설정
