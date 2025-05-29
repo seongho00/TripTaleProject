@@ -133,7 +133,7 @@ public class UsrMemberController {
 
 	@RequestMapping("usr/member/findLoginPage")
 	public String findLoginId(Model model, @RequestParam(defaultValue = "id") String findType) {
-
+		
 		if (findType.equals("id")) {
 			model.addAttribute("activeId", true);
 			model.addAttribute("activePw", false);
