@@ -4,7 +4,8 @@
 <c:set var="pageTitle" value="MAIN PAGE"></c:set>
 <%@ include file="../common/head.jspf"%>
 
-<a href="../member/developerJoin">로그인</a>
+<a href="../member/developerJoin">회원가입</a>
+<a href="../member/login">로그인</a>
 <a href="../member/doLogout">로그아웃</a>
 
 <div

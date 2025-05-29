@@ -37,4 +37,10 @@ public class UsrHomeController {
 		return "usr/home/main";
 	}
 
+	@RequestMapping("/")
+	public String main2(Model model) {
+
+		return "usr/home/main";
+	}
+
 }

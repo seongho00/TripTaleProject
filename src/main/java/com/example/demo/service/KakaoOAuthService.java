@@ -1,7 +1,11 @@
 package com.example.demo.service;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -12,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.vo.Rq;
@@ -136,32 +141,6 @@ public class KakaoOAuthService {
 			e.printStackTrace();
 		}
 
-	}
-
-	// 카카오 로그아웃
-	public void doLogout() {
-		HttpSession session = (HttpSession) rq.getSession();
-
-		String accessToken = (String) session.getAttribute("accessToken");
-
-		String url = "https://kapi.kakao.com/v1/user/logout";
-
-		// 1. 헤더 설정
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.parseMediaType("application/x-www-form-urlencoded;charset=utf-8"));
-		headers.setBearerAuth(accessToken); // "Authorization: Bearer {ACCESS_TOKEN}"
-		headers.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
-
-		// 2. HttpEntity 생성 (POST 바디는 필요 없음)
-		HttpEntity<String> request = new HttpEntity<>(null, headers);
-
-		// 3. RestTemplate 사용
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
-
-		// 4. 결과 출력
-//		System.out.println("응답 코드: " + response.getStatusCode());
-//		System.out.println("응답 바디: " + response.getBody());
 	}
 
 }

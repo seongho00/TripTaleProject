@@ -17,17 +17,18 @@
 			</div>
 		</div>
 		<div
-			class="flex justify-center items-center self-stretch flex-grow-0 flex-shrink-0 h-[33px] relative overflow-hidden gap-[31px]">
+			class="flex justify-center items-center self-stretch flex-grow-0 flex-shrink-0 h-[33px] relative overflow-hidden gap-[10px]">
 
-			<p class="flex justify-center items-center flex-col flex-grow-0 flex-shrink-0 w-[140px] h-[33px] text-xl text-center text-black">
+			<a href="#"
+				class=" flex justify-center items-center flex-col flex-grow-0 flex-shrink-0 w-[150px] h-[33px] text-xl text-center text-black">
 				아이디 찾기
 				<svg width="120" height="1" viewBox="0 0 100 1" fill="none" xmlns="http://www.w3.org/2000/svg"
 					class="flex-grow-0 flex-shrink-0" preserveAspectRatio="none">
         <line y1="0.5" x2="121" y2="0.5" stroke="black"></line>
       </svg>
-			</p>
-			<p class="self-stretch flex-grow-0 flex-shrink-0 w-[140px] h-[33px] opacity-50 text-xl text-center text-black/80">
-				비밀번호 찾기</p>
+			</a>
+			<a href="#" class="x self-stretch flex-grow-0 flex-shrink-0 w-[150px] h-[33px] opacity-50 text-xl text-center text-black/80">
+				비밀번호 찾기</a>
 		</div>
 		<div class="flex-grow-0 flex-shrink-0 w-[373px] h-[95px] relative overflow-hidden">
 			<p class="w-[78px] h-5 absolute left-[17px] top-[7px] text-lg text-left text-black">이름</p>
@@ -36,7 +37,7 @@
 				type="text" name="name" placeholder="이름" autocomplete="off"></input>
 
 			<br>
-			<img class="w-[35px] h-[35px] absolute left-[25px] top-[43px] opacity-50" src="image-7.png" />
+			<img class="w-[35px] h-[35px] absolute left-[25px] top-[43px] opacity-50" src="/images/사람.png" />
 		</div>
 		<div class=" flex-grow-0 flex-shrink-0 w-[364px] h-[95px] relative overflow-hidden">
 			<p class="w-[78px] h-5 absolute left-[13px] top-0 text-lg text-left text-black">이메일</p>
@@ -44,11 +45,11 @@
 			<input class="pl-5 w-[289px] h-[46px] absolute left-[65px] top-[31px] bg-[#f4f5f5] border border-[#757678] text-lg"
 				type="text" name="name" placeholder="이메일" autocomplete="off"></input>
 
-			<img src="image-8.png" class="w-[35px] h-[35px] absolute left-[21px] top-9 opacity-50 object-cover" />
+			<img src="/images/이메일.png" class="w-[35px] h-[35px] absolute left-[21px] top-9 opacity-50 object-cover" />
 		</div>
 		<div
 			class="flex flex-col justify-center items-center flex-grow-0 flex-shrink-0 h-12 w-[276px] relative overflow-hidden rounded-[5px] bg-[#18a0fb]">
-			<p class="flex-grow-0 flex-shrink-0 text-2xl text-center text-white">아이디 찾기</p>
+			<a class="flex-grow-0 flex-shrink-0 text-2xl text-center text-white" href="#">아이디 찾기</a>
 		</div>
 	</div>
 </div>

@@ -1,10 +1,13 @@
 package com.example.demo.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.demo.WebMvcConfigurer;
 import com.example.demo.interceptor.BeforeActionInterceptor;
@@ -70,10 +73,16 @@ public class UsrMemberController {
 		return "usr/home/main";
 	}
 
-	@RequestMapping("usr/member/findLoginId")
+	@RequestMapping("usr/member/login")
+	public String login(Model model) {
+
+		return "usr/member/login";
+	}
+
+	@RequestMapping("usr/member/findLoginPage")
 	public String findLoginId(Model model) {
 
-		return "usr/member/findLoginId";
+		return "usr/member/findLoginPage";
 	}
 
 	@RequestMapping("usr/member/naverCallback")
@@ -96,20 +105,20 @@ public class UsrMemberController {
 		return "usr/home/main";
 	}
 
-	@RequestMapping("usr/member/doLogout")
+	@GetMapping("usr/member/doLogout")
 	public String doLogout(Model model) {
 
 		if (rq.isLogined()) {
 			rq.logout();
 			try {
-				kakaoOAuthService.doLogout();
+				return "redirect:http://localhost:8080/usr/member/kakaoLogout";
 			} catch (Exception e) {
 
 			}
 
 			try {
-				System.out.println("실행됨");
-				return "usr/home/logoutBridge";
+//				System.out.println("실행됨");
+//				return "usr/home/logoutBridge";
 			} catch (Exception e) {
 
 			}
@@ -122,5 +131,15 @@ public class UsrMemberController {
 	public String naverLogout(Model model) {
 
 		return "redirect:https://nid.naver.com/nidlogin.logout";
+	}
+
+	@GetMapping("usr/member/kakaoLogout")
+	public String kakaoLogoutRedirect() {
+		System.out.println("실행됨");
+		String clientId = rq.getKakaoClientId();
+		String logoutRedirectUri = "http://localhost:8080/usr/home/main";
+		String url = "https://kauth.kakao.com/oauth/logout?client_id=" + clientId + "&logout_redirect_uri="
+				+ URLEncoder.encode(logoutRedirectUri, StandardCharsets.UTF_8);
+		return "redirect:" + url;
 	}
 }

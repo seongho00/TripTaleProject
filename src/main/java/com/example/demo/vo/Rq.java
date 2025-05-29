@@ -26,8 +26,8 @@ public class Rq {
 
 	private boolean isLogined = false;
 	private String loginedMemberId = "0";
-	private String kakaoClientId = "541f86bf90d42b106f889073398e10c1";
-	private String kakaoClientSecret = "8kAietvsMC83mkKpHolADKbQWotGGMPU";
+	private String kakaoClientId = "fdb5547cba370d99cd11f485522654f4";
+	private String kakaoClientSecret = "zSX1DNEIyVlTcd7Cm9WD420ZiIAdObK7";
 	private String naverClientId = "5lIc5HiT6OdtWBZYb5k5";
 	private String naverClientSecret = "OhDWVNoA76";
 
