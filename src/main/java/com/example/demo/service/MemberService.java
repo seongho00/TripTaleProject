@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.repository.MemberRepository;
+import com.example.demo.vo.Member;
 import com.example.demo.vo.ResultData;
 import com.mysql.cj.xdevapi.Result;
 
@@ -23,6 +24,11 @@ public class MemberService {
 		int id = memberRepository.getLastInsertId();
 
 		return ResultData.from(nickname, email);
+	}
+
+	public Member getMemberByLoingId(String loginId) {
+		
+		return memberRepository.getMemberByLoingId(loginId);
 	}
 
 }

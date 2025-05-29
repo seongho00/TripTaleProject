@@ -14,7 +14,9 @@
 		class="flex justify-center items-center self-stretch flex-grow-0 flex-shrink-0 h-[138px] overflow-hidden gap-2.5 px-[293px] py-[41px] bg-[#aedff7] border border-black">
 		<div
 			class="flex justify-center items-center flex-grow-0 flex-shrink-0 w-[1008px] h-[138 px] relative gap-2.5 bg-[#aedff7] border-0 border-[#f00]">
-			<img src="/images/로고.png" class="flex-grow-0 flex-shrink-0 w-[138px] h-[138px] object-cover" />
+			<a href="../home/main">
+				<img src="/images/로고.png" class="flex-grow-0 flex-shrink-0 w-[109px] h-[76px] object-cover" />
+			</a>
 			<div class="flex justify-start items-start self-stretch flex-grow relative overflow-hidden gap-2.5 p-2.5">
 				<p class="self-stretch flex-grow w-[127.33px] h-[118px] text-xl font-medium text-center text-[#2f3a4b]">숙박</p>
 				<p class="self-stretch flex-grow w-[127.33px] h-[118px] text-xl font-medium text-center text-[#2f3a4b]">맛집</p>

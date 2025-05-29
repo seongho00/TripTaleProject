@@ -9,13 +9,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.example.demo.WebMvcConfigurer;
 import com.example.demo.interceptor.BeforeActionInterceptor;
 import com.example.demo.service.KakaoOAuthService;
 import com.example.demo.service.MemberService;
 import com.example.demo.service.NaverOAuthService;
+import com.example.demo.util.Ut;
+import com.example.demo.vo.Member;
 import com.example.demo.vo.ResultData;
 import com.example.demo.vo.Rq;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class UsrMemberController {
@@ -56,6 +62,52 @@ public class UsrMemberController {
 		return "usr/member/developerJoin";
 	}
 
+	@RequestMapping("usr/member/naverCallback")
+	public String naverCallback(String code, String state) throws UnsupportedEncodingException {
+
+		String accessToken = naverOAuthService.requestAccessToken(code, state);
+
+		naverOAuthService.getUserInfo(accessToken);
+
+		return "usr/home/main";
+	}
+
+	@RequestMapping("usr/member/kakaoCallback")
+	public String kakaoCallback(String code) {
+
+		String accessToken = kakaoOAuthService.requestAccessToken(code);
+
+		kakaoOAuthService.getUserInfo(accessToken);
+
+		return "usr/home/main";
+	}
+
+	@GetMapping("usr/member/doLogout")
+	public String doLogout(Model model) {
+		HttpSession session = (HttpSession) rq.getSession();
+
+		if (rq.isLogined()) {
+			rq.logout();
+
+			if (session.getAttribute("kakaoAccessToken") != null) {
+				session.removeAttribute("kakaoAccessToken");
+				return "redirect:http://localhost:8080/usr/member/kakaoLogout";
+			}
+
+		}
+		return "usr/home/main";
+	}
+
+	@GetMapping("usr/member/kakaoLogout")
+	public String kakaoLogoutRedirect() {
+
+		String clientId = rq.getKakaoClientId();
+		String logoutRedirectUri = "http://localhost:8080/usr/home/main";
+		String url = "https://kauth.kakao.com/oauth/logout?client_id=" + clientId + "&logout_redirect_uri="
+				+ URLEncoder.encode(logoutRedirectUri, StandardCharsets.UTF_8);
+		return "redirect:" + url;
+	}
+
 	@RequestMapping("usr/member/join")
 	public String join(Model model) {
 
@@ -80,66 +132,40 @@ public class UsrMemberController {
 	}
 
 	@RequestMapping("usr/member/findLoginPage")
-	public String findLoginId(Model model) {
+	public String findLoginId(Model model, @RequestParam(defaultValue = "id") String findType) {
+
+		if (findType.equals("id")) {
+			model.addAttribute("activeId", true);
+			model.addAttribute("activePw", false);
+		} else if (findType.equals("pw")) {
+			model.addAttribute("activePw", true);
+			model.addAttribute("activeId", false);
+		}
 
 		return "usr/member/findLoginPage";
 	}
 
-	@RequestMapping("usr/member/naverCallback")
-	public String naverCallback(String code, String state) throws UnsupportedEncodingException {
+	@RequestMapping("usr/member/doLogin")
+	public String doLogin(Model model, String loginId, String loginPw) {
 
-		String accessToken = naverOAuthService.requestAccessToken(code, state);
-
-		naverOAuthService.getUserInfo(accessToken);
-
-		return "usr/home/main";
-	}
-
-	@RequestMapping("usr/member/kakaoCallback")
-	public String kakaoCallback(String code) {
-
-		String accessToken = kakaoOAuthService.requestAccessToken(code);
-
-		kakaoOAuthService.getUserInfo(accessToken);
-
-		return "usr/home/main";
-	}
-
-	@GetMapping("usr/member/doLogout")
-	public String doLogout(Model model) {
-
-		if (rq.isLogined()) {
-			rq.logout();
-			try {
-				return "redirect:http://localhost:8080/usr/member/kakaoLogout";
-			} catch (Exception e) {
-
-			}
-
-			try {
-//				System.out.println("실행됨");
-//				return "usr/home/logoutBridge";
-			} catch (Exception e) {
-
-			}
-
+		if (Ut.isEmptyOrNull(loginId)) {
+			return rq.historyBackOnView("아이디를 입력해주세요.");
 		}
-		return "usr/home/main";
+
+		if (Ut.isEmptyOrNull(loginPw)) {
+			return rq.historyBackOnView("비밀번호를 입력해주세요.");
+		}
+
+		Member loginedMember = memberService.getMemberByLoingId(loginId);
+
+		if (loginedMember == null) {
+			return rq.historyBackOnView("존재하지 않는 아이디입니다.");
+		}
+		if (!loginedMember.getLoginPw().equals(loginPw)) {
+			return rq.historyBackOnView("비밀번호가 일치하지 않습니다.");
+		}
+
+		return rq.replace(loginedMember.getName() + "님 환영합니다.", "http://localhost:8080/usr/home/main");
 	}
 
-	@RequestMapping("usr/member/naverLogout")
-	public String naverLogout(Model model) {
-
-		return "redirect:https://nid.naver.com/nidlogin.logout";
-	}
-
-	@GetMapping("usr/member/kakaoLogout")
-	public String kakaoLogoutRedirect() {
-		System.out.println("실행됨");
-		String clientId = rq.getKakaoClientId();
-		String logoutRedirectUri = "http://localhost:8080/usr/home/main";
-		String url = "https://kauth.kakao.com/oauth/logout?client_id=" + clientId + "&logout_redirect_uri="
-				+ URLEncoder.encode(logoutRedirectUri, StandardCharsets.UTF_8);
-		return "redirect:" + url;
-	}
 }

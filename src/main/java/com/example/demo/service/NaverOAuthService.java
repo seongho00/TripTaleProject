@@ -17,6 +17,8 @@ import com.example.demo.vo.Rq;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.servlet.http.HttpSession;
+
 @Service
 public class NaverOAuthService {
 	@Autowired
@@ -59,12 +61,12 @@ public class NaverOAuthService {
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode root = objectMapper.readTree(responseBody);
 
-			String accessToken = root.path("access_token").asText();
+			String naverAccessToken = root.path("access_token").asText();
 			String tokenType = root.path("token_type").asText();
 			String refreshToken = root.path("refresh_token").asText();
 			int expiresIn = root.path("expires_in").asInt();
 
-			return accessToken;
+			return naverAccessToken;
 
 		} catch (Exception e) {
 			e.printStackTrace();

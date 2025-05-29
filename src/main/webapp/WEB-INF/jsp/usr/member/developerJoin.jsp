@@ -32,7 +32,9 @@ session.setAttribute("state", state);
 		class="flex flex-col justify-start items-center flex-grow-0 flex-shrink-0 h-[611px] w-[510px] overflow-hidden gap-7 py-[7px] rounded-[10px] bg-[#aedff7] border border-black"
 		style="box-shadow: 4px 4px 4px 1px rgba(0, 0, 0, 0.25);">
 		<div class="flex flex-col justify-start items-center flex-grow-0 flex-shrink-0 relative overflow-hidden">
-			<img src="/images/로고.png" class="flex-grow-0 flex-shrink-0 w-[109px] h-[76px] object-cover" />
+			<a href="../home/main">
+				<img src="/images/로고.png" class="flex-grow-0 flex-shrink-0 w-[109px] h-[76px] object-cover" />
+			</a>
 			<p class="mt-2 flex-grow-0 flex-shrink-0 w-[510px] h-[50px] text-5xl text-center text-black">회원가입</p>
 		</div>
 		<div

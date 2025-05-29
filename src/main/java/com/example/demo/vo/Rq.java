@@ -80,13 +80,16 @@ public class Rq {
 	public String historyBackOnView(String msg) {
 		req.setAttribute("msg", msg);
 		req.setAttribute("historyBack", true);
+		req.removeAttribute("replace");
+
 		return "usr/common/js";
 	}
 
-	public String jsReplace(String msg, String replaceLocation) {
+	public String replace(String msg, String replaceLocation) {
 		req.setAttribute("replaceLocation", replaceLocation);
 		req.setAttribute("msg", msg);
 		req.setAttribute("replace", true);
+		req.removeAttribute("historyBack");
 		return "usr/common/js";
 	}
 

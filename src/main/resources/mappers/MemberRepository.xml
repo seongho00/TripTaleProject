@@ -8,10 +8,12 @@
 
 	<select id="doJoin" parameterType="map">
 		INSERT INTO `member`
-		SET regDate = NOW(),
+		SET
+		regDate = NOW(),
 		updateDate = NOW(),
 		loginId = #{loginId},
-		loginPw = #{loginPw},
+		loginPw =
+		#{loginPw},
 		`name` = #{name},
 		nickname = #{nickname},
 		email = #{email}
@@ -21,6 +23,12 @@
 	<select id="getLastInsertId" parameterType="int">
 		SELECT
 		LAST_INSERT_ID()
+	</select>
+
+	<select id="getMemberByLoingId" parameterType="map">
+		SELECT *
+		FROM `member`
+		WHERE loginId = #{loginId}
 	</select>
 
 </mapper>

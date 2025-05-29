@@ -3,8 +3,8 @@
 
 
 <script>
-	let historyBack = '${historyBack} == true';
-	let replace = '${historyBack} == true';
+	let historyBack = '${historyBack}';
+	let replace = '${replace}';
 	let replaceLocation = '${replaceLocation}';
 	let msg = '${msg}'.trim();
 
@@ -12,11 +12,10 @@
 		alert(msg);
 	}
 	if (historyBack) {
-
 		history.back();
 	}
 	if (replace) {
-		replace(replaceLocation);
+		location.replace(replaceLocation);
 	}
 </script>
 

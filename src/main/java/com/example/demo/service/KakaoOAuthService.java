@@ -75,7 +75,7 @@ public class KakaoOAuthService {
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode root = objectMapper.readTree(responseBody);
 
-			String accessToken = root.path("access_token").asText();
+			String kakaoAccessToken = root.path("access_token").asText();
 			String tokenType = root.path("token_type").asText();
 			String idToken = root.path("id_token").asText();
 			String scope = root.path("scope").asText();
@@ -83,9 +83,10 @@ public class KakaoOAuthService {
 			int expiresIn = root.path("expires_in").asInt();
 			int refreshTokenExpiresIn = root.path("refresh_token_expires_in").asInt();
 			HttpSession session = (HttpSession) rq.getSession();
-			session.setAttribute("accessToken", accessToken);
+			session.setAttribute("kakaoAccessToken", kakaoAccessToken);
 
-			return accessToken;
+			
+			return kakaoAccessToken;
 
 		} catch (Exception e) {
 			e.printStackTrace();
