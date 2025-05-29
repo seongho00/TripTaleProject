@@ -33,10 +33,12 @@ session.setAttribute("state", state);
 			<a href="<%=apiURL%>">
 				<img class=" w-full h-20" src="/images/네이버 로그인.png" />
 			</a>
+			
 			<a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoClientId}&redirect_uri=${kakaoRedirectUri}">
-				<img src="/images/카카오 로그인.png" width="222" alt="카카오 로그인 버튼" />
+				<img src="/images/카카오 로그인.png" width="222"  />
 			</a>
-			<p id="token-result"></p>
+			
+	
 
 		</div>
 		<div class="flex justify-center items-center self-stretch flex-grow-0 flex-shrink-0 relative overflow-hidden gap-2.5">

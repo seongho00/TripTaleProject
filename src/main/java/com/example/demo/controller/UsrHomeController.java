@@ -42,5 +42,11 @@ public class UsrHomeController {
 
 		return "usr/home/main";
 	}
+	
+	@RequestMapping("usr/test/kakaoTest")
+	public String kakaoTest(Model model) {
+
+		return "usr/test/kakaoTest";
+	}
 
 }
