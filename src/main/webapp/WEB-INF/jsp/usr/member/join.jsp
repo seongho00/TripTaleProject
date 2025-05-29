@@ -17,7 +17,7 @@
 			</a>
 			<p class="mt-2 flex-grow-0 flex-shrink-0 w-[510px] h-[50px] text-5xl text-center text-black">회원가입</p>
 		</div>
-		<form action="doJoin" id="joinForm" method="get">
+		<form action="doJoin" id="joinForm" method="POST">
 			<div class="flex flex-col justify-start items-start flex-grow-0 flex-shrink-0 relative overflow-hidden">
 				<div class="flex-grow-0 flex-shrink-0 w-[380px] h-[90px] relative overflow-hidden">
 					<div class="w-[341px] h-[46px] absolute left-[17px] top-[34px] bg-[#f4f5f5] border border-[#757678]"></div>
@@ -44,6 +44,13 @@
 					<input class="w-[289px] h-[46px] absolute left-[65px] top-7 bg-[#f4f5f5] border border-[#757678] pl-5 text-lg"
 						type="text" name="email" placeholder="이메일" autocomplete="off"></input>
 					<img src="/images/이메일.png" class="w-[35px] h-[35px] absolute left-[21px] top-[33px] opacity-50 object-cover" />
+				</div>
+				<div class="flex-grow-0 flex-shrink-0 w-[380px] h-[90px] relative overflow-hidden">
+					<p class="w-[78px] h-5 absolute left-[13px] top-[3px] text-lg text-left text-black">이름</p>
+					<div class="w-[341px] h-[46px] absolute left-[13px] top-7 bg-[#f4f5f5] border border-[#757678]"></div>
+					<input class="w-[289px] h-[46px] absolute left-[65px] top-7 bg-[#f4f5f5] border border-[#757678] pl-5 text-lg"
+						type="text" name="name" placeholder="이름" autocomplete="off"></input>
+					<img src="/images/사람.png" class="w-[35px] h-[35px] absolute left-[21px] top-[33px]  object-cover" />
 				</div>
 			</div>
 		</form>

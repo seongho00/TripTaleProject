@@ -74,6 +74,7 @@ public class UsrMemberController {
 
 	@RequestMapping("usr/member/kakaoCallback")
 	public String kakaoCallback(String code) {
+		
 
 		String accessToken = kakaoOAuthService.requestAccessToken(code);
 
@@ -115,14 +116,28 @@ public class UsrMemberController {
 	}
 
 	@RequestMapping("usr/member/doJoin")
-	public String doJoin(Model model, String loginId, String loginPw, String name, String nickname, String email) {
+	public String doJoin(Model model, String loginId, String loginPw, String name, String email) {
 
-		email = "aofjorgj@napkgpsrg";
-		name = "test";
-		nickname = "test_nickname";
-		ResultData doJoinRd = memberService.doJoin(loginId, loginPw, name, nickname, email);
+		if (Ut.isEmptyOrNull(loginId)) {
+			return rq.historyBackOnView("아이디를 입력해주세요.");
+		}
 
-		return "usr/home/main";
+		if (Ut.isEmptyOrNull(loginPw)) {
+			return rq.historyBackOnView("비밀번호를 입력해주세요.");
+		}
+		
+		if (Ut.isEmptyOrNull(name)) {
+			return rq.historyBackOnView("이름을 입력해주세요.");
+		}
+		
+		if (Ut.isEmptyOrNull(email)) {
+			return rq.historyBackOnView("이메일을 입력해주세요.");
+		}
+		
+
+		ResultData doJoinRd = memberService.doJoin(loginId, loginPw, name, email);
+
+		return rq.replace(name + "님 환영합니다.", "http://localhost:8080/usr/home/main");
 	}
 
 	@RequestMapping("usr/member/login")
@@ -133,7 +148,7 @@ public class UsrMemberController {
 
 	@RequestMapping("usr/member/findLoginPage")
 	public String findLoginId(Model model, @RequestParam(defaultValue = "id") String findType) {
-		
+
 		if (findType.equals("id")) {
 			model.addAttribute("activeId", true);
 			model.addAttribute("activePw", false);

@@ -6,11 +6,9 @@
 
 <script >
 
-
 	var activeId = ${activeId};
 	var activePw = ${activePw};
 
-	alert(activePw);
 </script>
 
 <script defer>
@@ -21,7 +19,6 @@
 				$('#idButton').addClass('btn-active');
 				$('.findIdUi').addClass('ui-active');
 			} else if (activePw) {
-				alert("실행됨");
 				$('#pwButton').addClass('btn-active');
 				$('.findPwUi').addClass('ui-active');
 			}

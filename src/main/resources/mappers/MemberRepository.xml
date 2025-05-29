@@ -15,7 +15,6 @@
 		loginPw =
 		#{loginPw},
 		`name` = #{name},
-		nickname = #{nickname},
 		email = #{email}
 
 	</select>

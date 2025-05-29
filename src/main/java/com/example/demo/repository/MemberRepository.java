@@ -8,7 +8,7 @@ import com.example.demo.vo.Member;
 @Mapper
 public interface MemberRepository {
 
-	public void doJoin(String loginId, String loginPw, String name, String nickname, String email);
+	public void doJoin(String loginId, String loginPw, String name, String email);
 
 	public int getLastInsertId();
 

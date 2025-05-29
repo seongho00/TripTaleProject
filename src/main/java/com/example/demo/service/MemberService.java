@@ -18,16 +18,16 @@ public class MemberService {
 		this.memberRepository = memberRepository;
 	}
 
-	public ResultData doJoin(String loginId, String loginPw, String name, String nickname, String email) {
+	public ResultData doJoin(String loginId, String loginPw, String name, String email) {
 
-		memberRepository.doJoin(loginId, loginPw, name, nickname, email);
+		memberRepository.doJoin(loginId, loginPw, name, email);
 		int id = memberRepository.getLastInsertId();
 
-		return ResultData.from(nickname, email);
+		return ResultData.from("S-1", "로그인 성공", "memberId", id);
 	}
 
 	public Member getMemberByLoingId(String loginId) {
-		
+
 		return memberRepository.getMemberByLoingId(loginId);
 	}
 

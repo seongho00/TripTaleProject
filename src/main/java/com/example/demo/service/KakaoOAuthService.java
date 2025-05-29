@@ -39,30 +39,27 @@ public class KakaoOAuthService {
 		// 1. 요청 URL
 		String url = "https://kauth.kakao.com/oauth/token";
 
-		// 2. 요청 파라미터 설정
+		// 2. 파라미터 설정
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("grant_type", "authorization_code");
-		params.add("client_id", clientId); // 👉 여기에 실제 REST API 키 입력
+		params.add("client_id", clientId);
 		params.add("redirect_uri", "http://localhost:8080/usr/member/kakaoCallback");
 		params.add("code", authorizationCode);
-		params.add("client_secret", clientSecret); // 👉 클라이언트 시크릿 추가
+		params.add("client_secret", clientSecret);
+		
 
 		// 3. 헤더 설정
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.set("Accept-Charset", "UTF-8");
 
-		// 4. 요청 객체 구성
+		// 4. 요청 조합
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
-		// 5. RestTemplate 사용
+		// 5. 요청 실행
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
-
-		// 6. 응답 출력
-//		System.out.println("응답 코드: " + response.getStatusCode());
-//		System.out.println("응답 바디: " + response.getBody());
 		String accessTokenBody = parseResponseBody(response.getBody());
-
 		return accessTokenBody;
 
 	}
@@ -85,7 +82,6 @@ public class KakaoOAuthService {
 			HttpSession session = (HttpSession) rq.getSession();
 			session.setAttribute("kakaoAccessToken", kakaoAccessToken);
 
-			
 			return kakaoAccessToken;
 
 		} catch (Exception e) {
