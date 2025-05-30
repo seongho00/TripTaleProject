@@ -25,9 +25,21 @@ public class UsrPlannerController {
 	}
 
 	@RequestMapping("usr/planner/calender")
-	public String main(Model model) {
+	public String calender(Model model) {
 
 		return "usr/planner/calender";
+	}
+	
+	@RequestMapping("usr/planner/selectTime")
+	public String selectTime(Model model) {
+
+		return "usr/planner/selectTime";
+	}
+	
+	@RequestMapping("usr/planner/reigon")
+	public String reigon(Model model) {
+
+		return "usr/planner/reigon";
 	}
 
 }

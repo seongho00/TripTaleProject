@@ -74,7 +74,6 @@ public class UsrMemberController {
 
 	@RequestMapping("usr/member/kakaoCallback")
 	public String kakaoCallback(String code) {
-		
 
 		String accessToken = kakaoOAuthService.requestAccessToken(code);
 
@@ -125,15 +124,14 @@ public class UsrMemberController {
 		if (Ut.isEmptyOrNull(loginPw)) {
 			return rq.historyBackOnView("비밀번호를 입력해주세요.");
 		}
-		
+
 		if (Ut.isEmptyOrNull(name)) {
 			return rq.historyBackOnView("이름을 입력해주세요.");
 		}
-		
+
 		if (Ut.isEmptyOrNull(email)) {
 			return rq.historyBackOnView("이메일을 입력해주세요.");
 		}
-		
 
 		ResultData doJoinRd = memberService.doJoin(loginId, loginPw, name, email);
 
@@ -142,6 +140,12 @@ public class UsrMemberController {
 
 	@RequestMapping("usr/member/login")
 	public String login(Model model) {
+		
+		String kakaoClientId = rq.getKakaoClientId();
+		String kakaoRedirectUri = "http://localhost:8080/usr/member/kakaoCallback";
+
+		model.addAttribute("kakaoClientId", kakaoClientId);
+		model.addAttribute("kakaoRedirectUri", kakaoRedirectUri);
 
 		return "usr/member/login";
 	}

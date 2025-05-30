@@ -31,9 +31,7 @@ public class UsrHomeController {
 	@RequestMapping("usr/home/main")
 	public String main(Model model) {
 
-		Article article = articleService.getArticle();
 
-		model.addAttribute("article", article);
 		return "usr/home/main";
 	}
 
@@ -43,10 +41,16 @@ public class UsrHomeController {
 		return "usr/home/main";
 	}
 	
-	@RequestMapping("usr/test/kakaoTest")
-	public String kakaoTest(Model model) {
+	@RequestMapping("usr/test/kakaoMapTest")
+	public String kakaoMapTest(Model model) {
 
-		return "usr/test/kakaoTest";
+		return "usr/test/kakaoMapTest";
+	}
+	
+	@RequestMapping("usr/test/GeoJSONTest")
+	public String GeoJSONTest(Model model) {
+
+		return "usr/test/GeoJSONTest";
 	}
 
 }
