@@ -1,26 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!DOCTYPE html>
-<html>
-<head>
-<link rel="stylesheet" href="/resource/common.css" />
-<script src="/resource/common.js" defer="defer"></script>
-<!-- 제이쿼리 -->
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-<!-- 폰트어썸 -->
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-<!-- 폰트어썸 FREE 아이콘 리스트 : https://fontawesome.com/v5.15/icons?d=gallery&p=2&m=free -->
-
-<!-- 테일윈드 -->
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
+<c:set var="pageTitle" value="MAIN PAGE"></c:set>
+<%@ include file="../common/head.jspf"%>
 <style>
 .flatpickr-day.inRange {
 	background: #AEDFF7; /* 파란 계열 배경 */
@@ -65,9 +48,8 @@
 	z-index: 10;
 }
 </style>
-<title>Insert title here</title>
 
-</head>
+
 <body>
 	<div
 		class="planner_calender flex flex-col justify-center items-center w-screen h-screen overflow-hidden gap-2.5 bg-[#020000]/[0.43] border border-[#0f0000]">

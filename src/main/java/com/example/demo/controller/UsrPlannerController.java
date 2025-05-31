@@ -27,10 +27,15 @@ public class UsrPlannerController {
 	}
 
 	@RequestMapping("usr/planner/calender")
-	public String calender(Model model, int year, int month) {
-		
+	public String calender(Model model) {
 
 		return "usr/planner/calender";
+	}
+
+	@RequestMapping("usr/planner/showCalender")
+	public String showCalender(Model model) {
+
+		return "usr/planner/showCalender";
 	}
 
 	@RequestMapping("usr/planner/selectTime")
