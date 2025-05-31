@@ -30,6 +30,7 @@
 
 		var calendar = new FullCalendar.Calendar(calendarEl, {
 			initialView : 'dayGridMonth',
+			events : '/calendar/events', // DB랑 연결해줄 컨트롤러 uri 작성
 			headerToolbar : headerToolbar
 
 		});
