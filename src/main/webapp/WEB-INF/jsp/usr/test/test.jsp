@@ -2,13 +2,9 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<script
-	src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>
+<c:set var="pageTitle" value="MAIN PAGE"></c:set>
+<%@ include file="../common/head.jspf"%>
+
 <style>
 #calendar {
 	max-width: 1100px;
@@ -30,10 +26,30 @@
 
 		var calendar = new FullCalendar.Calendar(calendarEl, {
 			initialView : 'dayGridMonth',
-			events : '/calendar/events', // DB랑 연결해줄 컨트롤러 uri 작성
-			headerToolbar : headerToolbar
-
+			events : '/fullCalendar/showScheduleList', // DB랑 연결해줄 컨트롤러 uri 작성
+			headerToolbar : headerToolbar,
+			editable : true, // ✅ 드래그로 옮기기 가능
+			eventDrop : function(info) {
+				$.ajax({
+					url : '/fullCalendar/updateSchedule',
+					method : 'POST',
+					contentType : 'application/json',
+					data : JSON.stringify({
+						id : info.event.id,
+						start : info.event.startStr,
+						end : info.event.endStr
+					}),
+					success : function() {
+						console.log('일정이 성공적으로 변경되었습니다.');
+					},
+					error : function() {
+						alert('일정 이동에 실패했습니다.');
+						info.revert(); // ← 실패 시 원래 위치로 되돌림
+					}
+				});
+			}
 		});
+
 		calendar.render();
 
 	});

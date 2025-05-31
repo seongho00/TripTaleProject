@@ -15,35 +15,23 @@ import com.example.demo.TripTaleProjectApplication;
 import com.example.demo.vo.Rq;
 
 @Controller
-public class UsrPlannerController {
+public class UsrFullCalendarController {
 
 	private final TripTaleProjectApplication tripTaleProjectApplication;
 
 	@Autowired
 	Rq rq;
 
-	UsrPlannerController(TripTaleProjectApplication tripTaleProjectApplication) {
+	UsrFullCalendarController(TripTaleProjectApplication tripTaleProjectApplication) {
 		this.tripTaleProjectApplication = tripTaleProjectApplication;
 
 	}
 
-	@RequestMapping("usr/planner/calendar")
-	public String calender(Model model) {
-
-		return "usr/planner/calendar";
-	}
-
-	@RequestMapping("usr/planner/showFullCalendar")
-	public String showCalender(Model model) {
-
-		return "usr/planner/showFullCalendar";
-	}
-
-	@RequestMapping("/fullCalendar/scheduleList")
+	@RequestMapping("/fullCalendar/showScheduleList")
 	@ResponseBody
 	public List<Map<String, Object>> scheduleList(Model model) {
 		List<Map<String, Object>> schedualeList = new ArrayList<>();
-		
+
 		// 날짜만 저장
 		Map<String, Object> scheduale1 = new HashMap<>();
 		scheduale1.put("title", "회의");
@@ -61,16 +49,10 @@ public class UsrPlannerController {
 		return schedualeList;
 	}
 
-	@RequestMapping("usr/planner/selectTime")
-	public String selectTime(Model model) {
+	@RequestMapping("/fullCalendar/updateSchedule")
+	@ResponseBody
+	public void updateSchedule(Model model) {
 
-		return "usr/planner/selectTime";
-	}
-
-	@RequestMapping("usr/planner/reigon")
-	public String reigon(Model model) {
-
-		return "usr/planner/reigon";
 	}
 
 }

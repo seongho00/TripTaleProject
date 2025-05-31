@@ -43,27 +43,7 @@ public class UsrHomeController {
 
 	@RequestMapping("usr/test/test")
 	public String test(Model model) {
-//		int year = 2025;
-//		int month = 5;
-//		Calendar cal = Calendar.getInstance();
-//		System.out.printf("\t\t%d년 %d월\n", year, month);
-//		System.out.printf("일\t월\t화\t수\t목\t금\t토\n");
-//
-//		cal.set(year, month - 1, 1);
-//
-//		int start = cal.get(Calendar.DAY_OF_WEEK);
-//
-//		for (int i = 1; i < start; i++) {
-//			System.out.print("\t");
-//		}
-//
-//		for (int i = 1; i <= cal.getActualMaximum(Calendar.DATE); i++) {
-//			System.out.printf("%d\t", i);
-//			if (start % 7 == 0) {
-//				System.out.println();
-//			}
-//			start++;
-//		}
+
 
 		return "usr/test/test";
 	}
