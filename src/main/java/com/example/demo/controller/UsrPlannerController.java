@@ -39,28 +39,6 @@ public class UsrPlannerController {
 		return "usr/planner/showFullCalendar";
 	}
 
-	@RequestMapping("/fullCalendar/scheduleList")
-	@ResponseBody
-	public List<Map<String, Object>> scheduleList(Model model) {
-		List<Map<String, Object>> schedualeList = new ArrayList<>();
-		
-		// 날짜만 저장
-		Map<String, Object> scheduale1 = new HashMap<>();
-		scheduale1.put("title", "회의");
-		scheduale1.put("start", "2025-05-20");
-		scheduale1.put("end", "2025-05-19");
-
-		// 시간까지 저장
-		Map<String, Object> scheduale2 = new HashMap<>();
-		scheduale2.put("title", "회의");
-		scheduale2.put("start", "2025-05-26T09:00:00");
-		scheduale2.put("end", "2025-05-27T18:00:00");
-
-		schedualeList.add(scheduale1);
-
-		return schedualeList;
-	}
-
 	@RequestMapping("usr/planner/selectTime")
 	public String selectTime(Model model) {
 

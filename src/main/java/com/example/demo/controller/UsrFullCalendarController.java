@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.TripTaleProjectApplication;
+import com.example.demo.service.FullCalendarService;
 import com.example.demo.vo.Rq;
 
 @Controller
@@ -19,6 +20,8 @@ public class UsrFullCalendarController {
 
 	private final TripTaleProjectApplication tripTaleProjectApplication;
 
+	@Autowired
+	FullCalendarService fullCalendarService;
 	@Autowired
 	Rq rq;
 
@@ -30,13 +33,15 @@ public class UsrFullCalendarController {
 	@RequestMapping("/fullCalendar/showScheduleList")
 	@ResponseBody
 	public List<Map<String, Object>> scheduleList(Model model) {
+
+//		List<Map<String, Object>> schedualeList1 = fullCalendarService.getschedualeList();
 		List<Map<String, Object>> schedualeList = new ArrayList<>();
 
 		// 날짜만 저장
 		Map<String, Object> scheduale1 = new HashMap<>();
 		scheduale1.put("title", "회의");
-		scheduale1.put("start", "2025-05-20");
-		scheduale1.put("end", "2025-05-19");
+		scheduale1.put("start", "2025-05-19");
+		scheduale1.put("end", "2025-05-23");
 
 		// 시간까지 저장
 		Map<String, Object> scheduale2 = new HashMap<>();
@@ -45,6 +50,8 @@ public class UsrFullCalendarController {
 		scheduale2.put("end", "2025-05-27T18:00:00");
 
 		schedualeList.add(scheduale1);
+
+		schedualeList.add(scheduale2);
 
 		return schedualeList;
 	}
