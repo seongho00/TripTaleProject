@@ -1,107 +1,88 @@
-window.onload = function() {
-	// Kakao 지도 API가 완전히 로드된 후 실행
-	kakao.maps.load(function() {
-		console.log("✅ Kakao Maps API 로드 완료");
+window.onload = function () {
+  kakao.maps.load(function () {
+    const mapContainer = document.getElementById('map');
+    const map = new kakao.maps.Map(mapContainer, {
+      center: new kakao.maps.LatLng(35.8, 127.8),
+      level: 12
+    });
 
-		const mapContainer = document.getElementById('map');
-		const map = new kakao.maps.Map(mapContainer, {
-			center: new kakao.maps.LatLng(35.8, 127.8),
-			level: 12
-		});
+    map.setZoomable(false);
 
-		const colors = [
-			'#f94144', '#f3722c', '#f8961e', '#f9c74f',
-			'#90be6d', '#43aa8b', '#577590', '#277da1',
-			'#4d908e', '#b5838d', '#6a4c93', '#f28482',
-			'#84a59d', '#f6bd60', '#cdb4db', '#9a8c98', '#2a9d8f'
-		];
+    const colors = [
+      '#f94144', '#f3722c', '#f8961e', '#f9c74f',
+      '#90be6d', '#43aa8b', '#577590', '#277da1',
+      '#4d908e', '#b5838d', '#6a4c93', '#f28482',
+      '#84a59d', '#f6bd60', '#cdb4db', '#9a8c98', '#2a9d8f'
+    ];
 
-		fetch('/sd.geojson.json')
-			.then(res => {
-				if (!res.ok) throw new Error(`HTTP 오류: ${res.status}`);
-				return res.json();
-			})
-			.then(geojson => {
-				geojson.features.forEach((feature, index) => {
-					const name = feature.properties?.name || feature.properties?.SIG_KOR_NM || feature.properties?.CTP_KOR_NM || `미지정${index}`;
-					const color = colors[index % colors.length];
+    const fallbackNames = [
+      "서울특별시", "부산광역시", "대구광역시", "인천광역시", "광주광역시",
+      "대전광역시", "울산광역시", "세종특별자치시", "경기도", "강원도",
+      "충청북도", "충청남도", "전라북도", "전라남도", "경상북도",
+      "경상남도", "제주특별자치도"
+    ];
 
-					if (!feature.geometry || !Array.isArray(feature.geometry.coordinates)) {
-						console.warn(`❌ ${name} : geometry 또는 좌표 없음 → 건너뜀`);
-						return;
-					}
+    fetch('/sd_cleaned.geojson.json')
+      .then(res => res.json())
+      .then(geojson => {
+        geojson.features.forEach((feature, index) => {
+          const name = feature.properties?.name || fallbackNames[index] || `미지정${index}`;
+          const color = colors[index % colors.length];
 
-					const coords = feature.geometry.coordinates;
-					const type = feature.geometry.type;
-					const polygons = [];
+          const coords = feature.geometry?.coordinates;
+          const type = feature.geometry?.type;
+          const polygons = [];
 
-					try {
-						if (type === "Polygon") {
-							coords.forEach(ring => {
-								const path = ring.map(coord => new kakao.maps.LatLng(coord[1], coord[0]));
-								polygons.push(path);
-							});
-						} else if (type === "MultiPolygon") {
-							coords.forEach(polygon => {
-								polygon.forEach(ring => {
-									const path = ring.map(coord => new kakao.maps.LatLng(coord[1], coord[0]));
-									polygons.push(path);
-								});
-							});
-						} else {
-							console.warn(`❌ ${name} : 알 수 없는 geometry type(${type}) → 건너뜀`);
-							return;
-						}
-					} catch (e) {
-						console.warn(`❌ ${name} : 좌표 파싱 오류 → 건너뜀`, e);
-						return;
-					}
+          if (!coords || !Array.isArray(coords)) return;
 
-					if (polygons.length === 0) {
-						console.warn(`⚠️ ${name} : 유효한 path 없음 → 건너뜀`);
-						return;
-					}
+          if (type === "Polygon") {
+            coords.forEach(ring => {
+              const path = ring
+                .map(coord => new kakao.maps.LatLng(coord[1], coord[0]))
+                .filter(p => p);
+              if (path.length) polygons.push(path);
+            });
+          } else if (type === "MultiPolygon") {
+            coords.forEach(multi => {
+              multi.forEach(ring => {
+                const path = ring
+                  .map(coord => new kakao.maps.LatLng(coord[1], coord[0]))
+                  .filter(p => p);
+                if (path.length) polygons.push(path);
+              });
+            });
+          }
 
-					const polygon = new kakao.maps.Polygon({
-						map: map,
-						path: polygons,
-						strokeWeight: 2,
-						strokeColor: '#333',
-						strokeOpacity: 0.8,
-						fillColor: color,
-						fillOpacity: 0.5
-					});
+          if (!polygons.length) return;
 
-					const bounds = new kakao.maps.LatLngBounds();
-					let hasPoints = false;
+          new kakao.maps.Polygon({
+            map,
+            path: polygons,
+            strokeWeight: 2,
+            strokeColor: '#333',
+            strokeOpacity: 0.8,
+            fillColor: color,
+            fillOpacity: 0.5
+          });
 
-					polygons.forEach(path => {
-						path.forEach(latlng => {
-							if (latlng instanceof kakao.maps.LatLng) {
-								bounds.extend(latlng);
-								hasPoints = true;
-							}
-						});
-					});
+          const latlngs = polygons.flat();
+          if (!latlngs.length) return;
 
-					if (!hasPoints || typeof bounds.getCenter !== 'function') {
-						console.warn(`⚠️ ${name} : bounds 유효하지 않음 → 라벨 생략`);
-						return;
-					}
+          const sumLat = latlngs.reduce((sum, latlng) => sum + latlng.getLat(), 0);
+          const sumLng = latlngs.reduce((sum, latlng) => sum + latlng.getLng(), 0);
+          const avgLat = sumLat / latlngs.length;
+          const avgLng = sumLng / latlngs.length;
 
-					const center = bounds.getCenter();
-					console.log(`[DEBUG] ${name} bounds:`, bounds);
-					console.log(`[DEBUG] getCenter:`, typeof bounds.getCenter, bounds.getCenter);
-					const label = new kakao.maps.CustomOverlay({
-						position: center,
-						content: `<div class="label">${name}</div>`,
-						yAnchor: 0.5
-					});
-					label.setMap(map);
-				});
-			})
-			.catch(err => {
-				console.error("🚨 GeoJSON 로드 실패:", err);
-			});
-	});
+          const label = new kakao.maps.CustomOverlay({
+            position: new kakao.maps.LatLng(avgLat, avgLng),
+            content: `<div class="label">${name}</div>`,
+            xAnchor: 0.5,
+            yAnchor: 0.6  // 🔧 위치 아래로 약간 이동
+          });
+
+          label.setMap(map);
+        });
+      })
+      .catch(err => console.error("🚨 GeoJSON 로드 실패:", err));
+  });
 };
