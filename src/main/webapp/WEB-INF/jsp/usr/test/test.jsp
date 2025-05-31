@@ -9,11 +9,6 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
 <style>
-#datepicker {
-	width: 600px;
-	margin: 20px auto;
-}
-
 .flatpickr-day.inRange {
 	background: #AEDFF7; /* 파란 계열 배경 */
 	color: black; /* 글자색 */
@@ -62,21 +57,27 @@
 </head>
 <body>
 
-	<div id="datepicker">
-		<script>
-			flatpickr("#datepicker", {
-				dateFormat : "Y-m-d",
-				mode : "range",
-				inline : true,
-				locale : "ko",
-				showMonths : 2,
-				onChange : function(selectedDates, dateStr, instance) {
-					if (selectedDates.length === 2) {
-						console.log("시작일:", selectedDates[0]);
-						console.log("종료일:", selectedDates[1]);
-					}
+	<input type="text" id="datepicker"
+		style="position: absolute; left: -9999px;">
+	<script>
+		flatpickr("#datepicker", {
+			dateFormat : "Y-m-d", // 출력 포맷
+			mode : "range",
+			inline : true,
+			locale : "ko", // 한국어 사용 시
+			showMonths : 2,
+			onChange : function(selectedDates, dateStr, instance) {
+				if (selectedDates.length === 2) {
+					const startDate = selectedDates[0];
+					const endDate = selectedDates[1];
+
+					// 여기서 원하는 동작 수행
+					console.log("시작일:", startDate);
+					console.log("종료일:", endDate);
 				}
-			});
-		</script>
+			},
+			
+		});
+	</script>
 </body>
 </html>
