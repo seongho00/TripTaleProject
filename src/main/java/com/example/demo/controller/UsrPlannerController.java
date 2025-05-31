@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.util.Calendar;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,17 +27,18 @@ public class UsrPlannerController {
 	}
 
 	@RequestMapping("usr/planner/calender")
-	public String calender(Model model) {
+	public String calender(Model model, int year, int month) {
+		
 
 		return "usr/planner/calender";
 	}
-	
+
 	@RequestMapping("usr/planner/selectTime")
 	public String selectTime(Model model) {
 
 		return "usr/planner/selectTime";
 	}
-	
+
 	@RequestMapping("usr/planner/reigon")
 	public String reigon(Model model) {
 

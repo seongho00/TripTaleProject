@@ -8,7 +8,6 @@
 <title>Insert title here</title>
 <script type="text/javascript"
 	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=24d1b6883d7e9adfaf4ff1844fa92b7a&autoload=false&libraries=services"></script>
-</head>
 <style>
 .label {
 	background: white;
@@ -19,6 +18,8 @@
 	white-space: nowrap;
 }
 </style>
+</head>
+
 <body>
 
 	<!-- 지도를 표시할 div 입니다 -->

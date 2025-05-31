@@ -55,7 +55,7 @@ window.onload = function() {
 
 					if (!polygons.length) return;
 
-					new kakao.maps.Polygon({
+					const polygon = new kakao.maps.Polygon({
 						map,
 						path: polygons,
 						strokeWeight: 2,
@@ -73,13 +73,8 @@ window.onload = function() {
 					const avgLat = sumLat / latlngs.length;
 					const avgLng = sumLng / latlngs.length;
 
+					let adjustedCenter = new kakao.maps.LatLng(avgLat, avgLng);
 
-
-					const center = new kakao.maps.LatLng(avgLat, avgLng);
-
-					let adjustedCenter = center;
-
-					// 이름에 따라 위치 조정
 					if (name === "경기도") {
 						adjustedCenter = new kakao.maps.LatLng(avgLat - 0.3, avgLng + 0.1);
 					} else if (name === "경상남도") {
@@ -99,7 +94,31 @@ window.onload = function() {
 						yAnchor: 0.5
 					});
 
-					label.setMap(map);
+					label.setMap(null); // 기본은 숨김
+
+					// ✅ 마우스 오버
+					kakao.maps.event.addListener(polygon, 'mouseover', function() {
+						polygon.setOptions({
+							fillColor: '#ffd166',
+							fillOpacity: 0.8
+						});
+						label.setMap(map);
+					});
+
+					// ✅ 마우스 아웃
+					kakao.maps.event.addListener(polygon, 'mouseout', function() {
+						polygon.setOptions({
+							fillColor: color,
+							fillOpacity: 1
+						});
+						label.setMap(null);
+					});
+
+					// ✅ 클릭
+					kakao.maps.event.addListener(polygon, 'click', function() {
+						alert(`👉 ${name} 클릭됨`);
+						// 필요 시 다른 동작 실행 가능
+					});
 				});
 			})
 			.catch(err => console.error("🚨 GeoJSON 로드 실패:", err));
