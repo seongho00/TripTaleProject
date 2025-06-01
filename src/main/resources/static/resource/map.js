@@ -7,6 +7,7 @@ window.onload = function() {
 		});
 
 		map.setZoomable(false);
+		let activeInfoOverlay = null;
 
 		const colors = [
 			'#f94144', '#f3722c', '#f8961e', '#f9c74f',
@@ -28,99 +29,152 @@ window.onload = function() {
 				geojson.features.forEach((feature, index) => {
 					const name = feature.properties?.name || fallbackNames[index] || `미지정${index}`;
 					const color = colors[index % colors.length];
-
 					const coords = feature.geometry?.coordinates;
 					const type = feature.geometry?.type;
-					const polygons = [];
 
 					if (!coords || !Array.isArray(coords)) return;
-
-					if (type === "Polygon") {
-						coords.forEach(ring => {
-							const path = ring
-								.map(coord => new kakao.maps.LatLng(coord[1], coord[0]))
-								.filter(p => p);
-							if (path.length) polygons.push(path);
-						});
-					} else if (type === "MultiPolygon") {
-						coords.forEach(multi => {
-							multi.forEach(ring => {
-								const path = ring
-									.map(coord => new kakao.maps.LatLng(coord[1], coord[0]))
-									.filter(p => p);
-								if (path.length) polygons.push(path);
-							});
-						});
-					}
-
+					const polygons = extractPolygons(type, coords);
 					if (!polygons.length) return;
 
-					const polygon = new kakao.maps.Polygon({
-						map,
-						path: polygons,
-						strokeWeight: 2,
-						strokeColor: '#333',
-						strokeOpacity: 0.8,
-						fillColor: color,
-						fillOpacity: 1
-					});
+					const polygon = createPolygon(map, polygons, color);
+					const center = adjustCenter(polygons.flat(), name);
+					const labelEl = createLabelElement(name);
 
-					const latlngs = polygons.flat();
-					if (!latlngs.length) return;
-
-					const sumLat = latlngs.reduce((sum, latlng) => sum + latlng.getLat(), 0);
-					const sumLng = latlngs.reduce((sum, latlng) => sum + latlng.getLng(), 0);
-					const avgLat = sumLat / latlngs.length;
-					const avgLng = sumLng / latlngs.length;
-
-					let adjustedCenter = new kakao.maps.LatLng(avgLat, avgLng);
-
-					if (name === "경기도") {
-						adjustedCenter = new kakao.maps.LatLng(avgLat - 0.3, avgLng + 0.1);
-					} else if (name === "경상남도") {
-						adjustedCenter = new kakao.maps.LatLng(avgLat + 0.3, avgLng);
-					} else if (name === "경상북도") {
-						adjustedCenter = new kakao.maps.LatLng(avgLat + 0.1, avgLng - 0.2);
-					} else if (name === "전라북도") {
-						adjustedCenter = new kakao.maps.LatLng(avgLat, avgLng + 0.2);
-					} else if (name === "충청북도") {
-						adjustedCenter = new kakao.maps.LatLng(avgLat, avgLng - 0.2);
-					}
-
-					const label = new kakao.maps.CustomOverlay({
-						position: adjustedCenter,
-						content: `<div class="label">${name}</div>`,
+					const labelOverlay = new kakao.maps.CustomOverlay({
+						position: center,
+						content: labelEl,
 						xAnchor: 0.5,
 						yAnchor: 0.5
 					});
+					labelOverlay.setMap(map);
 
-					label.setMap(null); // 기본은 숨김
+					// 이벤트 핸들러
+					const onMouseOver = () => polygon.setOptions({ fillColor: '#ffffff', fillOpacity: 1 });
+					const onMouseOut = () => polygon.setOptions({ fillColor: color, fillOpacity: 1 });
+					const onClick = () => showInfoOverlay(map, center, name);
 
-					// ✅ 마우스 오버
-					kakao.maps.event.addListener(polygon, 'mouseover', function() {
-						polygon.setOptions({
-							fillColor: '#ffd166',
-							fillOpacity: 0.8
-						});
-						label.setMap(map);
-					});
+					kakao.maps.event.addListener(polygon, 'mouseover', onMouseOver);
+					kakao.maps.event.addListener(polygon, 'mouseout', onMouseOut);
+					kakao.maps.event.addListener(polygon, 'click', onClick);
 
-					// ✅ 마우스 아웃
-					kakao.maps.event.addListener(polygon, 'mouseout', function() {
-						polygon.setOptions({
-							fillColor: color,
-							fillOpacity: 1
-						});
-						label.setMap(null);
-					});
-
-					// ✅ 클릭
-					kakao.maps.event.addListener(polygon, 'click', function() {
-						alert(`👉 ${name} 클릭됨`);
-						// 필요 시 다른 동작 실행 가능
-					});
+					labelEl.addEventListener('mouseover', onMouseOver);
+					labelEl.addEventListener('mouseout', onMouseOut);
+					labelEl.addEventListener('click', onClick);
 				});
 			})
 			.catch(err => console.error("🚨 GeoJSON 로드 실패:", err));
+
+		function extractPolygons(type, coords) {
+			const polygons = [];
+			const toLatLngs = ring => ring.map(c => new kakao.maps.LatLng(c[1], c[0]));
+			if (type === "Polygon") {
+				coords.forEach(ring => polygons.push(toLatLngs(ring)));
+			} else if (type === "MultiPolygon") {
+				coords.forEach(multi => multi.forEach(ring => polygons.push(toLatLngs(ring))));
+			}
+			return polygons;
+		}
+
+		function createPolygon(map, polygons, color) {
+			return new kakao.maps.Polygon({
+				map,
+				path: polygons,
+				strokeWeight: 2,
+				strokeColor: '#333',
+				strokeOpacity: 0.8,
+				fillColor: color,
+				fillOpacity: 1
+			});
+		}
+
+		function adjustCenter(latlngs, name) {
+			const avg = latlngs.reduce(
+				(sum, latlng) => {
+					sum.lat += latlng.getLat();
+					sum.lng += latlng.getLng();
+					return sum;
+				}, { lat: 0, lng: 0 }
+			);
+			let lat = avg.lat / latlngs.length;
+			let lng = avg.lng / latlngs.length;
+
+			// 라벨 위치 조절
+			const adjust = {
+				"경기도": [-0.3, 0.1],
+				"경상남도": [0.3, 0],
+				"경상북도": [0.1, -0.2],
+				"전라북도": [0, 0.2],
+				"충청북도": [0, -0.2]
+			};
+
+			if (adjust[name]) {
+				lat += adjust[name][0];
+				lng += adjust[name][1];
+			}
+
+			return new kakao.maps.LatLng(lat, lng);
+		}
+
+		function createLabelElement(name) {
+			const div = document.createElement('div');
+			div.className = 'label bg-white border border-gray-600 px-2 py-1 rounded text-sm text-black';
+			div.style.pointerEvents = 'auto';
+			div.innerText = name;
+			return div;
+		}
+		
+		// 클릭 시 오버레이 표시 코드
+		// 오버레이 html 코드
+		function createInfoContent(name) {
+			return `
+		    <div class="relative w-48 h-[198px] flex flex-col items-center gap-1.5 p-2.5 bg-white border border-black shadow-md rounded">
+		      <!-- 닫기 버튼 -->
+		      <button class="absolute top-1 right-1 text-black text-lg font-bold close-btn"><i class="fa-solid fa-xmark text-3xl"></i></button>
+
+		      <img src="/images/로고.png" class="w-[183px] h-[103px] object-cover" />
+		      <p class="w-[111px] h-[30px] text-xl text-center text-black">${name}</p>
+		      <div class="w-[95px] h-[27px] rounded-[10px] bg-[#18a0fb] cursor-pointer flex items-center justify-center select-btn">
+		        <p class="text-xl text-white">선택</p>
+		      </div>
+		    </div>
+		  `;
+		}
+
+		function showInfoOverlay(map, position, name) {
+			if (activeInfoOverlay) activeInfoOverlay.setMap(null);
+
+			const content = createInfoContent(name);
+
+			// 오버레이 위치 조절
+			activeInfoOverlay = new kakao.maps.CustomOverlay({
+				position,
+				content,
+				xAnchor: 0.5,
+				yAnchor: 1.08
+			});
+
+			activeInfoOverlay.setMap(map);
+
+			// 버튼 이벤트 바인딩
+			setTimeout(() => {
+				const selectBtn = document.querySelector('.select-btn');
+				const closeBtn = document.querySelector('.close-btn');
+
+				if (selectBtn) {
+					selectBtn.addEventListener('click', () => {
+						alert(`✅ ${name} 선택됨!`);
+					});
+				}
+
+				if (closeBtn) {
+					closeBtn.addEventListener('click', () => {
+						if (activeInfoOverlay) {
+							activeInfoOverlay.setMap(null);
+							activeInfoOverlay = null;
+						}
+					});
+				}
+			}, 0);
+		}
 	});
 };

@@ -1,13 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<script type="text/javascript"
-	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=24d1b6883d7e9adfaf4ff1844fa92b7a&autoload=false&libraries=services"></script>
+<c:set var="pageTitle" value="MAIN PAGE"></c:set>
+<%@ include file="../common/head.jspf"%>
 <style>
 .label {
 	background: white;
@@ -16,10 +11,10 @@
 	border-radius: 4px;
 	font-size: 12px;
 	white-space: nowrap;
+	pointer-events: auto; /* 이벤트 받도록 설정 */
+	cursor: pointer;
 }
 </style>
-</head>
-
 <body>
 
 	<!-- 지도를 표시할 div 입니다 -->
