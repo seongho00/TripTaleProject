@@ -1,16 +1,13 @@
 package com.example.demo.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.TripTaleProjectApplication;
 import com.example.demo.vo.Rq;
@@ -33,6 +30,7 @@ public class UsrPlannerController {
 		if (region.equals("")) {
 			return rq.replace("지역을 선택해주세요.", "../planner/region");
 		}
+		model.addAttribute("region", region);
 
 		return "usr/planner/calendar";
 	}
@@ -44,7 +42,14 @@ public class UsrPlannerController {
 	}
 
 	@RequestMapping("usr/planner/selectTime")
-	public String selectTime(Model model) {
+	public String selectTime(Model model, LocalDateTime startDate, LocalDateTime endDate,
+			@RequestParam(defaultValue = "") String region) {
+		if (region.equals("")) {
+			return rq.replace("지역을 선택해주세요.", "../planner/region");
+		}
+
+		System.out.println("startDate : " + startDate);
+		System.out.println("endDate : " + endDate);
 
 		return "usr/planner/selectTime";
 	}
