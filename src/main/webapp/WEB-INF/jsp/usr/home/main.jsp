@@ -7,9 +7,9 @@
 <a href="../member/developerJoin">회원가입</a>
 <a href="../member/login">로그인</a>
 <a href="../member/doLogout">로그아웃</a>
-<a href="../planner/calender">캘린더</a>
-<a href="../planner/showCalender">캘린더 보기</a>
-<a href="../planner/reigon">지역선택</a>
+<a href="../planner/calendar">캘린더</a>
+<a href="../planner/showCalendar">캘린더 보기</a>
+<a href="../planner/region">지역선택</a>
 <div
 	class="flex flex-col justify-between items-center w-screen h-[2232px] overflow-hidden bg-white border border-[#0f0000]">
 	<div

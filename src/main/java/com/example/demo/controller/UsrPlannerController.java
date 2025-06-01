@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.TripTaleProjectApplication;
@@ -28,7 +29,10 @@ public class UsrPlannerController {
 	}
 
 	@RequestMapping("usr/planner/calendar")
-	public String calender(Model model) {
+	public String calender(Model model, @RequestParam(defaultValue = "") String region) {
+		if (region.equals("")) {
+			return rq.replace("지역을 선택해주세요.", "../planner/region");
+		}
 
 		return "usr/planner/calendar";
 	}
@@ -45,10 +49,10 @@ public class UsrPlannerController {
 		return "usr/planner/selectTime";
 	}
 
-	@RequestMapping("usr/planner/reigon")
-	public String reigon(Model model) {
+	@RequestMapping("usr/planner/region")
+	public String region(Model model) {
 
-		return "usr/planner/reigon";
+		return "usr/planner/region";
 	}
 
 }

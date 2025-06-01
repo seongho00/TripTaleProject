@@ -8,6 +8,7 @@
 
 	<script type="text/javascript"
 		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d7bf7c956990f8ef170f7a8d03a9bf34"></script>
+		
 	<script>
 		var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
 		mapOption = {

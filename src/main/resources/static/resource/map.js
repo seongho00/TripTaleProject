@@ -6,9 +6,17 @@ window.onload = function() {
 			level: 12
 		});
 
-		map.setZoomable(false);
+		map.setZoomable(false); // 휠 확대/축소 막기
+
+		// ✅ 더블클릭 확대 방지 (DOM 레벨 차단)
+		mapContainer.addEventListener('dblclick', function(e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}, true);
+
 		let activeInfoOverlay = null;
 
+		// 영역 색깔
 		const colors = [
 			'#f94144', '#f3722c', '#f8961e', '#f9c74f',
 			'#90be6d', '#43aa8b', '#577590', '#277da1',
@@ -16,6 +24,7 @@ window.onload = function() {
 			'#84a59d', '#f6bd60', '#cdb4db', '#9a8c98', '#2a9d8f'
 		];
 
+		// 영역 라벨 이름
 		const fallbackNames = [
 			"서울특별시", "부산광역시", "대구광역시", "인천광역시", "광주광역시",
 			"대전광역시", "울산광역시", "세종특별자치시", "경기도", "강원도",
@@ -122,14 +131,14 @@ window.onload = function() {
 			div.innerText = name;
 			return div;
 		}
-		
+
 		// 클릭 시 오버레이 표시 코드
 		// 오버레이 html 코드
 		function createInfoContent(name) {
 			return `
 		    <div class="relative w-48 h-[198px] flex flex-col items-center gap-1.5 p-2.5 bg-white border border-black shadow-md rounded">
 		      <!-- 닫기 버튼 -->
-		      <button class="absolute top-1 right-1 text-black text-lg font-bold close-btn"><i class="fa-solid fa-xmark text-3xl"></i></button>
+		      <button class="absolute top-1 right-1 text-black text-lg font-bold close-btn"><i class="fa-solid fa-xmark text-3xl cursor-pointer"></i></button>
 
 		      <img src="/images/로고.png" class="w-[183px] h-[103px] object-cover" />
 		      <p class="w-[111px] h-[30px] text-xl text-center text-black">${name}</p>
@@ -162,6 +171,7 @@ window.onload = function() {
 
 				if (selectBtn) {
 					selectBtn.addEventListener('click', () => {
+						location.replace(`../planner/calendar?region=${name}`);
 						alert(`✅ ${name} 선택됨!`);
 					});
 				}

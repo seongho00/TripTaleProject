@@ -54,10 +54,6 @@ public class UsrHomeController {
 		return "usr/test/kakaoMapTest";
 	}
 
-	@RequestMapping("usr/test/GeoJSONTest")
-	public String GeoJSONTest(Model model) {
 
-		return "usr/test/GeoJSONTest";
-	}
 
 }
