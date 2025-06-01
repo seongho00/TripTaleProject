@@ -150,12 +150,26 @@
 		});
 
 		calendar.render();
+		
+		// ✅ 버튼 클릭 시 일정 추가 
+		document.getElementById('addEventBtn').addEventListener('click', function (e) {
+			  const go = confirm('일정을 추가하시겠습니까?');
 
+			  if (!go) {
+			    // 사용자가 취소를 누른 경우
+			    e.preventDefault();  // 버튼 기본 동작 차단
+			    return false;
+			  }
+
+			  // 사용자가 확인을 누른 경우 → 페이지 이동
+			  window.location.href = '../planner/region';
+			});
+		
+	
 	});
 </script>
 </head>
 <body>
-
 
 
 	<div id='calendar'></div>
