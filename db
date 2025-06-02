@@ -1,0 +1,35 @@
+DROP DATABASE IF EXISTS `TripTale_project`;
+CREATE DATABASE `TripTale_project`;
+USE `TripTale_project`;
+
+CREATE TABLE TripInfo (
+	id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	tripName CHAR(30) NOT NULL,
+	tripRegion CHAR(10) NOT NULL,
+	tripStartDate DATETIME NOT NULL,
+	tripEndDate DATETIME NOT NULL,
+	memberId INT(10) NOT NULL
+);
+
+INSERT INTO TripInfo
+SET regDate = NOW(),
+updateDate = NOW(),
+tripName = '서울여행',
+tripRegion = '서울특별시',
+tripStartDate = '2025-06-03',
+tripEndDate = '2025-06-05',
+memberId = 1;
+
+INSERT INTO TripInfo
+SET regDate = NOW(),
+updateDate = NOW(),
+tripName = '서울여행2',
+tripRegion = '서울특별시',
+tripStartDate = '2025-06-03 18:00:00',
+tripEndDate = '2025-06-05 22:00:00',
+memberId = 1;
+
+SELECT *
+FROM TripInfo

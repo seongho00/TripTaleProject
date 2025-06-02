@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.TripTaleProjectApplication;
 import com.example.demo.service.FullCalendarService;
 import com.example.demo.vo.Rq;
+import com.example.demo.vo.TripInfo;
 
 @Controller
 public class UsrFullCalendarController {
@@ -32,34 +35,32 @@ public class UsrFullCalendarController {
 
 	@RequestMapping("/fullCalendar/showScheduleList")
 	@ResponseBody
-	public List<Map<String, Object>> scheduleList(Model model) {
+	public List<Map<String, Object>> scheduleList(Model model, int memberId) {
 
-//		List<Map<String, Object>> schedualeList1 = fullCalendarService.getschedualeList();
 		List<Map<String, Object>> schedualeList = new ArrayList<>();
 
-		// 날짜만 저장
-		Map<String, Object> scheduale1 = new HashMap<>();
-		scheduale1.put("title", "회의");
-		scheduale1.put("start", "2025-05-19");
-		scheduale1.put("end", "2025-05-23");
+		List<TripInfo> fullCalendarList = fullCalendarService.getschedualeList(memberId);
 
-		// 시간까지 저장
-		Map<String, Object> scheduale2 = new HashMap<>();
-		scheduale2.put("title", "회의");
-		scheduale2.put("start", "2025-05-26T09:00:00");
-		scheduale2.put("end", "2025-05-27T18:00:00");
-
-		schedualeList.add(scheduale1);
-
-		schedualeList.add(scheduale2);
+		for (TripInfo fullCalendar : fullCalendarList) {
+			Map<String, Object> scheduale = new HashMap<>();
+			scheduale.put("id", fullCalendar.getId());
+			scheduale.put("title", fullCalendar.getTripName());
+			scheduale.put("start", fullCalendar.getTripStartDate());
+			scheduale.put("end", fullCalendar.getTripEndDate());
+			schedualeList.add(scheduale);
+		}
 
 		return schedualeList;
 	}
 
 	@RequestMapping("/fullCalendar/updateSchedule")
 	@ResponseBody
-	public void updateSchedule(Model model) {
+	public String updateSchedule(Model model, int id, int memberId, String startDate, String endDate) {
 
+		LocalDateTime startLocalDate = OffsetDateTime.parse(startDate).toLocalDateTime();
+		LocalDateTime endLocalDate = OffsetDateTime.parse(endDate).toLocalDateTime();
+		fullCalendarService.updateSchedule(id, memberId, startLocalDate, endLocalDate);
+		return "";
 	}
 
 }

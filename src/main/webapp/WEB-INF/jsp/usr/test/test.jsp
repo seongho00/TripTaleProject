@@ -91,6 +91,12 @@
 	transform: translateX(0);
 	visibility: visible;
 }
+
+/* 일정 이동 시 달력 배경색 조절 */
+.fc-highlight {
+	background-color: #D6E8FF !important;
+	opacity: 1;
+}
 </style>
 
 <script>
@@ -106,66 +112,82 @@
 
 		var calendar = new FullCalendar.Calendar(calendarEl, {
 			initialView : 'dayGridMonth',
-			events : '/fullCalendar/showScheduleList', // DB랑 연결해줄 컨트롤러 uri 작성
+
 			locale : 'ko', // ✅ 한국어 로케일
 			firstDay : 1, // 월요일부터 시작
 			headerToolbar : headerToolbar, // 헤더 툴 바 코드
 			nowIndicator : true,
 			editable : true, // ✅ 드래그로 옮기기 가능
 
-			/* // ✅ 커스텀 버튼 정의
-			customButtons : {
-				addEventBtn : {
-					text : '일정 추가',
-					click : function() {
-						calendar.addEvent({
-							title : '새로운 일정',
-							start : new Date().toISOString().slice(0, 10)
-						});
-						alert('일정이 추가되었습니다.');
+			// DB랑 연결해줄 컨트롤러 uri 작성
+			events : function(fetchInfo, successCallback, failureCallback) {
+				const memberId = ${memberId};
+				$.ajax({
+					url : '/fullCalendar/showScheduleList',
+					type : 'POST',
+					data : {
+						memberId : memberId
+					},
+					success : function(response) {
+						successCallback(response);
+					},
+					error : function() {
+						failureCallback();
 					}
-				}
-			}, */
+				});
+			},
 
 			// 일정 수정 코드
 			eventDrop : function(info) {
+				const memberId = ${memberId};
+				const newStart = info.event.startStr.split('T')[0];
+				const newEnd = info.event.endStr.split('T')[0];
+				const eventId = info.event.id; // 바꿀려는 일정 id
+				const confirmChange = confirm("[" + newStart + "~" + newEnd
+						+ "]으로 일정을 변경하시겠습니까?");
+
+				if (!confirmChange) {
+					info.revert(); // 사용자가 취소한 경우 → 원래 위치로 복귀
+					return;
+				}
+
 				$.ajax({
 					url : '/fullCalendar/updateSchedule',
 					method : 'POST',
-					contentType : 'application/json',
-					data : JSON.stringify({
-						id : info.event.id,
-						start : info.event.startStr,
-						end : info.event.endStr
-					}),
+					data : {
+						id : eventId,
+						memberId : memberId,
+						startDate : info.event.startStr,
+						endDate : info.event.endStr
+					},
 					success : function() {
-						console.log('일정이 성공적으로 변경되었습니다.');
+						alert('일정이 성공적으로 변경되었습니다.');
 					},
 					error : function() {
 						alert('일정 이동에 실패했습니다.');
-						info.revert(); // ← 실패 시 원래 위치로 되돌림
+						info.revert(); // 실패 시 복구
 					}
 				});
 			}
 		});
 
 		calendar.render();
-		
+
 		// ✅ 버튼 클릭 시 일정 추가 
-		document.getElementById('addEventBtn').addEventListener('click', function (e) {
-			  const go = confirm('일정을 추가하시겠습니까?');
+		document.getElementById('addEventBtn').addEventListener('click',
+				function(e) {
+					const go = confirm('일정을 추가하시겠습니까?');
 
-			  if (!go) {
-			    // 사용자가 취소를 누른 경우
-			    e.preventDefault();  // 버튼 기본 동작 차단
-			    return false;
-			  }
+					if (!go) {
+						// 사용자가 취소를 누른 경우
+						e.preventDefault(); // 버튼 기본 동작 차단
+						return false;
+					}
 
-			  // 사용자가 확인을 누른 경우 → 페이지 이동
-			  window.location.href = '../planner/region';
-			});
-		
-	
+					// 사용자가 확인을 누른 경우 → 페이지 이동
+					window.location.href = '../planner/region';
+				});
+
 	});
 </script>
 </head>

@@ -42,9 +42,8 @@ public class UsrHomeController {
 	}
 
 	@RequestMapping("usr/test/test")
-	public String test(Model model) {
-
-
+	public String test(Model model, int memberId) {
+		model.addAttribute("memberId", memberId);
 		return "usr/test/test";
 	}
 
@@ -53,7 +52,5 @@ public class UsrHomeController {
 
 		return "usr/test/kakaoMapTest";
 	}
-
-
 
 }

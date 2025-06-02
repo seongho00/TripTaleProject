@@ -113,6 +113,7 @@
 			<groupId>jakarta.servlet.jsp.jstl</groupId>
 			<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
 		</dependency>
+		
 
 		<!-- 카카오 로그인 -->
 		<!-- WebClient 사용을 위한 의존성 (Spring WebFlux 포함) -->

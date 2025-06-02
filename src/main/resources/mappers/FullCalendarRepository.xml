@@ -3,13 +3,25 @@
  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.demo.repository.FullCalendarRepository">
+<mapper
+	namespace="com.example.demo.repository.FullCalendarRepository">
 
 
-	<select id="getschedualeList" parameterType="map">
-		
-
+	<select id="getschedualeList" parameterType="map"
+		resultType="com.example.demo.vo.TripInfo">
+		SELECT id, tripName, tripStartDate, tripEndDate
+		FROM
+		TripInfo
+		WHERE memberId = #{memberId}
+		ORDER BY id DESC
 	</select>
 
+ 	<select id="updateSchedule" parameterType="map">
+		UPDATE TripInfo
+		SET updateDate = NOW(),
+		tripStartDate = #{startDate},
+		tripEndDate = #{endDate}
+		WHERE id = #{id} AND memberId = #{memberId}
+	</select> 
 
 </mapper>

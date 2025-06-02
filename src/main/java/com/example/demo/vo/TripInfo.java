@@ -9,11 +9,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Calendar {
+public class TripInfo {
 
 	private int id;
+	private String regDate;
+	private String updateDate;
 	private String tripName;
+	private String tripRegion;
 	private String tripStartDate;
 	private String tripEndDate;
+	private int memberId;
 
 }
