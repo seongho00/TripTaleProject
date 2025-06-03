@@ -4,6 +4,7 @@
 
 <c:set var="pageTitle" value="MAIN PAGE"></c:set>
 
+<%@ include file="../common/head.jspf"%>
 <style>
 /* 달력 넓이 조절 */
 #calendar {
@@ -100,7 +101,7 @@
 
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
-
+		console.log();
 		var calendarEl = document.getElementById('calendar');
 
 		let headerToolbar = {
@@ -120,11 +121,7 @@
 
 			// DB랑 연결해줄 컨트롤러 uri 작성
 			events : function(fetchInfo, successCallback, failureCallback) {
-				const memberId = $
-				{
-					memberId
-				}
-				;
+				const memberId = ${memberId};
 				$.ajax({
 					url : '/fullCalendar/showScheduleList',
 					type : 'POST',
@@ -142,11 +139,7 @@
 
 			// 일정 수정 코드
 			eventDrop : function(info) {
-				const memberId = $
-				{
-					memberId
-				}
-				;
+				const memberId = ${memberId};
 				const newStart = info.event.startStr.split('T')[0];
 				const newEnd = info.event.endStr.split('T')[0];
 				const eventId = info.event.id; // 바꿀려는 일정 id
@@ -197,7 +190,7 @@
 
 	});
 </script>
-<%@ include file="../common/head.jspf"%>
+
 
 
 <body>
@@ -228,7 +221,7 @@
 						여행</p>
 					<p
 						class="flex-grow w-[159px] h-14 text-xl font-medium text-center text-black">계획
-						작성</p> <img src="/images/프로필-아이콘.png"
+						작성</p> <img src="/images/사람.png"
 						class="flex-grow-0 flex-shrink-0 w-[110px] h-[110px] object-cover" />
 			</div>
 		</div>
