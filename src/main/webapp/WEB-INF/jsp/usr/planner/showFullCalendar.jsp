@@ -121,7 +121,7 @@
 
 			// DB랑 연결해줄 컨트롤러 uri 작성
 			events : function(fetchInfo, successCallback, failureCallback) {
-				const memberId = ${memberId};
+				const memberId = '${memberId}';
 				$.ajax({
 					url : '/fullCalendar/showScheduleList',
 					type : 'POST',
@@ -139,7 +139,7 @@
 
 			// 일정 수정 코드
 			eventDrop : function(info) {
-				const memberId = ${memberId};
+				const memberId = '${memberId}';
 				const newStart = info.event.startStr.split('T')[0];
 				const newEnd = info.event.endStr.split('T')[0];
 				const eventId = info.event.id; // 바꿀려는 일정 id
@@ -192,8 +192,6 @@
 </script>
 
 
-
-<body>
 	<div
 		class="flex flex-col justify-start items-center w-screen h-screen overflow-hidden gap-2.5 bg-white border border-[#0f0000]">
 		<div
@@ -233,10 +231,12 @@
 				<p class="flex-grow-0 flex-shrink-0 text-3xl text-center text-black">일정
 					확인</p>
 		</div>
-			<div id='calendar'></div>
-
+			
+<div class="w-[1100px] " id='calendar'></div>
 	</div>
+	
 	</div>
+	
 	<div class="floating-btn-wrapper">
 		<button id="addEventBtn" class="floating-btn">
 			<span class="btn-icon">
