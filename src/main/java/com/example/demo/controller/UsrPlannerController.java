@@ -1,15 +1,17 @@
 package com.example.demo.controller;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.TripTaleProjectApplication;
+import com.example.demo.service.RegionImageService;
+import com.example.demo.vo.RegionImage;
 import com.example.demo.vo.Rq;
 
 @Controller
@@ -19,6 +21,8 @@ public class UsrPlannerController {
 
 	@Autowired
 	Rq rq;
+	@Autowired
+	private RegionImageService regionImageService;
 
 	UsrPlannerController(TripTaleProjectApplication tripTaleProjectApplication) {
 		this.tripTaleProjectApplication = tripTaleProjectApplication;
@@ -36,8 +40,8 @@ public class UsrPlannerController {
 	}
 
 	@RequestMapping("usr/planner/showFullCalendar")
-	public String showCalender(Model model) {
-
+	public String showFullCalendar(Model model, int memberId) {
+		model.addAttribute("memberId", memberId);
 		return "usr/planner/showFullCalendar";
 	}
 
@@ -57,6 +61,9 @@ public class UsrPlannerController {
 	@RequestMapping("usr/planner/region")
 	public String region(Model model) {
 
+//		List<RegionImage> regionImages = regionImageService.getRegionImage();
+//
+//		model.addAttribute("regionImages", regionImages);
 		return "usr/planner/region";
 	}
 

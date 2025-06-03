@@ -1,11 +1,13 @@
 package com.example.demo.controller;
 
-import java.util.Calendar;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.TripTaleProjectApplication;
 import com.example.demo.service.ArticleService;
@@ -51,6 +53,23 @@ public class UsrHomeController {
 	public String kakaoMapTest(Model model) {
 
 		return "usr/test/kakaoMapTest";
+	}
+
+	@RequestMapping("usr/test/APITest")
+	public String APITest(Model model) {
+
+		return "usr/test/APITest";
+	}
+
+	@GetMapping("api/image")
+	public ResponseEntity<String> getImageData(@RequestParam String contentId) {
+		String realKey = "CtMWbR%2BmYCIwYQmPYdFuMiP4LsJ6aVV3CcbyZUXI5bGiblyS1OilOVAYopA9VxwIcRyQ7pT%2FADS7FzuMVs3uEw%3D%3D";
+		String url = "https://apis.data.go.kr/B551011/KorService2/detailImage2?serviceKey=" + realKey
+				+ "&_type=json&MobileOS=ETC&MobileApp=TripTale&contentId=" + contentId;
+
+		RestTemplate rt = new RestTemplate();
+		String result = rt.getForObject(url, String.class);
+		return ResponseEntity.ok(result);
 	}
 
 }
