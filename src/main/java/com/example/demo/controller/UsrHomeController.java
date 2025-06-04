@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.TripTaleProjectApplication;
@@ -55,15 +56,18 @@ public class UsrHomeController {
 		return "usr/test/APITest";
 	}
 
-	@GetMapping("api/image")
-	public ResponseEntity<String> getImageData(@RequestParam String contentId) {
-		String realKey = "CtMWbR%2BmYCIwYQmPYdFuMiP4LsJ6aVV3CcbyZUXI5bGiblyS1OilOVAYopA9VxwIcRyQ7pT%2FADS7FzuMVs3uEw%3D%3D";
-		String url = "https://apis.data.go.kr/B551011/KorService2/detailImage2?serviceKey=" + realKey
-				+ "&_type=json&MobileOS=ETC&MobileApp=TripTale&contentId=" + contentId;
+	@RequestMapping("usr/test/timePickerTest")
+	public String timePickerTest(Model model) {
 
-		RestTemplate rt = new RestTemplate();
-		String result = rt.getForObject(url, String.class);
-		return ResponseEntity.ok(result);
+		return "usr/test/timePickerTest";
+	}
+
+	@RequestMapping("usr/test/timePickerResult")
+	@ResponseBody
+	public String timePickerResult(Model model, String selectHour, String selectMinute) {
+		System.out.println(selectHour);
+		System.out.println(selectMinute);
+		return "";
 	}
 
 }

@@ -2,6 +2,9 @@ package com.example.demo.controller;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -51,17 +54,28 @@ public class UsrPlannerController {
 			return rq.replace("지역을 선택해주세요.", "../planner/region");
 		}
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		// yyyy-MM-dd형식 포맷터
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-		String formattedStartDate = startDate.format(formatter);
-		String formattedEndDate = endDate.format(formatter);
+		// MM/dd 형식 포맷터
+		DateTimeFormatter monthDayFormatter = DateTimeFormatter.ofPattern("MM/dd");
 
-		System.out.println("startDate : " + formattedStartDate);
-		System.out.println("endDate : " + formattedEndDate);
+		String dateFormattedStartDate = startDate.format(dateFormatter);
+		String dateFormattedEndDate = endDate.format(dateFormatter);
 
-		model.addAttribute("startDate", formattedStartDate);
-		model.addAttribute("endDate", formattedEndDate);
+		long diffDays = ChronoUnit.DAYS.between(startDate, endDate) + 1;
 
+		// ✅ 날짜 리스트 생성
+		List<String> dateList = new ArrayList<>();
+		for (int i = 0; i < diffDays; i++) {
+			LocalDateTime targetDate = startDate.plusDays(i);
+			dateList.add(targetDate.format(monthDayFormatter)); // "MM/dd" 형식으로
+		}
+
+		model.addAttribute("startDate", dateFormattedStartDate);
+		model.addAttribute("endDate", dateFormattedEndDate);
+		model.addAttribute("dateList", dateList); // ✅ 날짜 리스트 전달
+		model.addAttribute("diffDays", diffDays);
 		return "usr/planner/selectTime";
 	}
 
@@ -73,5 +87,7 @@ public class UsrPlannerController {
 //		model.addAttribute("regionImages", regionImages);
 		return "usr/planner/region";
 	}
+	
+	
 
 }
