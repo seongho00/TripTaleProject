@@ -32,6 +32,14 @@ window.onload = function() {
 			"경상남도", "제주특별자치도"
 		];
 
+		// 영역 라벨에 따른 이미지 url
+		const imageUrls = [
+			"http://tong.visitkorea.or.kr/cms/resource/29/2678629_image2_1.jpg", "http://tong.visitkorea.or.kr/cms/resource/15/1974215_image2_1.jpg", "http://tong.visitkorea.or.kr/cms/resource/43/1573743_image2_1.jpg", "http://tong.visitkorea.or.kr/cms/resource/03/2599103_image2_1.jpg", "http://tong.visitkorea.or.kr/cms/resource/48/3083348_image2_1.jpg",
+			"http://tong.visitkorea.or.kr/cms/resource/68/3350768_image2_1.jpg", "http://tong.visitkorea.or.kr/cms/resource/81/2712581_image2_1.jpg", "http://tong.visitkorea.or.kr/cms/resource/70/3353970_image2_1.jpg", "http://tong.visitkorea.or.kr/cms/resource/08/2943208_image2_1.jpg", "http://tong.visitkorea.or.kr/cms/resource/55/3492855_image2_1.jpg",
+			"http://tong.visitkorea.or.kr/cms/resource/71/3494971_image2_1.jpg", "http://tong.visitkorea.or.kr/cms/resource/62/2797962_image2_1.jpg", "http://tong.visitkorea.or.kr/cms/resource/40/3358040_image2_1.JPG", "http://tong.visitkorea.or.kr/cms/resource/92/2653892_image2_1.jpg", "http://tong.visitkorea.or.kr/cms/resource/52/1567752_image2_1.jpg",
+			"http://tong.visitkorea.or.kr/cms/resource/53/3083353_image2_1.jpg", "http://tong.visitkorea.or.kr/cms/resource/93/1876193_image2_1.jpg"
+		];
+
 		fetch('/sd_cleaned.geojson.json')
 			.then(res => res.json())
 			.then(geojson => {
@@ -40,6 +48,7 @@ window.onload = function() {
 					const color = colors[index % colors.length];
 					const coords = feature.geometry?.coordinates;
 					const type = feature.geometry?.type;
+					const imageUrl = feature.properties?.imageUrl || imageUrls[index] || `미지정${index}`;
 
 					if (!coords || !Array.isArray(coords)) return;
 					const polygons = extractPolygons(type, coords);
@@ -60,7 +69,7 @@ window.onload = function() {
 					// 이벤트 핸들러
 					const onMouseOver = () => polygon.setOptions({ fillColor: '#ffffff', fillOpacity: 1 });
 					const onMouseOut = () => polygon.setOptions({ fillColor: color, fillOpacity: 1 });
-					const onClick = () => showInfoOverlay(map, center, name);
+					const onClick = () => showInfoOverlay(map, center, name, imageUrl);
 
 					kakao.maps.event.addListener(polygon, 'mouseover', onMouseOver);
 					kakao.maps.event.addListener(polygon, 'mouseout', onMouseOut);
@@ -134,13 +143,15 @@ window.onload = function() {
 
 		// 클릭 시 오버레이 표시 코드
 		// 오버레이 html 코드
-		function createInfoContent(name) {
+		function createInfoContent(name, imageUrl) {
 			return `
 		    <div class="relative w-48 h-[198px] flex flex-col items-center gap-1.5 p-2.5 bg-white border border-black shadow-md rounded">
 		      <!-- 닫기 버튼 -->
-		      <button class="absolute top-1 right-1 text-black text-lg font-bold close-btn"><i class="fa-solid fa-xmark text-3xl cursor-pointer"></i></button>
+		      <button class="absolute top-1 right-1 text-black text-lg font-bold close-btn">
+		        <i class="fa-solid fa-xmark text-3xl cursor-pointer"></i>
+		      </button>
 
-		      <img src="/images/로고.png" class="w-[183px] h-[103px] object-cover" />
+		      <img src="${imageUrl}" class="w-[183px] h-[103px] object-cover" />
 		      <p class="w-[111px] h-[30px] text-xl text-center text-black">${name}</p>
 		      <div class="w-[95px] h-[27px] rounded-[10px] bg-[#18a0fb] cursor-pointer flex items-center justify-center select-btn">
 		        <p class="text-xl text-white">선택</p>
@@ -149,10 +160,10 @@ window.onload = function() {
 		  `;
 		}
 
-		function showInfoOverlay(map, position, name) {
+		function showInfoOverlay(map, position, name, imageUrl) {
 			if (activeInfoOverlay) activeInfoOverlay.setMap(null);
 
-			const content = createInfoContent(name);
+			const content = createInfoContent(name, imageUrl);
 
 			// 오버레이 위치 조절
 			activeInfoOverlay = new kakao.maps.CustomOverlay({

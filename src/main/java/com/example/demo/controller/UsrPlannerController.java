@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.TripTaleProjectApplication;
 import com.example.demo.service.RegionImageService;
-import com.example.demo.vo.RegionImage;
 import com.example.demo.vo.Rq;
 
 @Controller
@@ -52,8 +51,16 @@ public class UsrPlannerController {
 			return rq.replace("지역을 선택해주세요.", "../planner/region");
 		}
 
-		System.out.println("startDate : " + startDate);
-		System.out.println("endDate : " + endDate);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+		String formattedStartDate = startDate.format(formatter);
+		String formattedEndDate = endDate.format(formatter);
+
+		System.out.println("startDate : " + formattedStartDate);
+		System.out.println("endDate : " + formattedEndDate);
+
+		model.addAttribute("startDate", formattedStartDate);
+		model.addAttribute("endDate", formattedEndDate);
 
 		return "usr/planner/selectTime";
 	}
