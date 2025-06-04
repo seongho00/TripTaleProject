@@ -59,8 +59,15 @@ public class UsrHomeController {
 	@ResponseBody
 	public String test(Model model) {
 		testService.process();
-		
+
 		return "";
+	}
+
+	@RequestMapping("usr/test/categoryAPITest")
+	public String categoryAPITest(Model model) {
+		kakaoOAuthService.coordToAddress();
+
+		return "usr/test/categoryAPITest";
 	}
 
 }

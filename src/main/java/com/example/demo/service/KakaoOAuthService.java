@@ -1,12 +1,5 @@
 package com.example.demo.service;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.example.demo.vo.Rq;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -46,7 +39,6 @@ public class KakaoOAuthService {
 		params.add("redirect_uri", "http://localhost:8080/usr/member/kakaoCallback");
 		params.add("code", authorizationCode);
 		params.add("client_secret", clientSecret);
-		
 
 		// 3. 헤더 설정
 		HttpHeaders headers = new HttpHeaders();
@@ -137,6 +129,39 @@ public class KakaoOAuthService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+	}
+
+	public void coordToAddress() {
+		String apiKey = "KakaoAK " + rq.getKakaoClientId(); // KakaoAK 꼭 포함
+
+		// 좌표 값
+		String x = "126.9937770548";
+		String y = "37.5985313567";
+
+		// API URL
+		String url = "https://dapi.kakao.com/v2/local/geo/coord2address.json";
+
+		// URI에 파라미터 추가
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("x", x).queryParam("y", y)
+				.queryParam("input_coord", "WGS84");
+
+		// 헤더 설정
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Authorization", apiKey);
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		// 요청 엔티티 생성
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+
+		// 요청 보내기
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<String> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity,
+				String.class);
+
+		// 응답 출력
+		System.out.println("응답 결과:");
+		System.out.println(response.getBody());
 
 	}
 
