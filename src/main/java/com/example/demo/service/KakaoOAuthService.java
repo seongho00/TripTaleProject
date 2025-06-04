@@ -132,12 +132,8 @@ public class KakaoOAuthService {
 
 	}
 
-	public void coordToAddress() {
+	public String coordToAddress(String x, String y) {
 		String apiKey = "KakaoAK " + rq.getKakaoClientId(); // KakaoAK 꼭 포함
-
-		// 좌표 값
-		String x = "126.9937770548";
-		String y = "37.5985313567";
 
 		// API URL
 		String url = "https://dapi.kakao.com/v2/local/geo/coord2address.json";
@@ -162,7 +158,7 @@ public class KakaoOAuthService {
 		// 응답 출력
 		System.out.println("응답 결과:");
 		System.out.println(response.getBody());
-
+		return response.getBody();
 	}
 
 }

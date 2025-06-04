@@ -65,9 +65,16 @@ public class UsrHomeController {
 
 	@RequestMapping("usr/test/categoryAPITest")
 	public String categoryAPITest(Model model) {
-		kakaoOAuthService.coordToAddress();
 
 		return "usr/test/categoryAPITest";
+	}
+
+	@RequestMapping("usr/test/coordToAddress")
+	@ResponseBody
+	public String coordToAddress(Model model, String mapX, String mapY) {
+
+		return kakaoOAuthService.coordToAddress(mapX, mapY);
+
 	}
 
 }
