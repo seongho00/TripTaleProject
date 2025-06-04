@@ -1,18 +1,15 @@
 package com.example.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.RestTemplate;
 
 import com.example.demo.TripTaleProjectApplication;
 import com.example.demo.service.ArticleService;
 import com.example.demo.service.KakaoOAuthService;
+import com.example.demo.service.TestService;
 import com.example.demo.vo.Rq;
 
 @Controller
@@ -26,6 +23,8 @@ public class UsrHomeController {
 	private KakaoOAuthService kakaoOAuthService;
 	@Autowired
 	Rq rq;
+	@Autowired
+	private TestService testService;
 
 	UsrHomeController(TripTaleProjectApplication tripTaleProjectApplication) {
 		this.tripTaleProjectApplication = tripTaleProjectApplication;
@@ -56,17 +55,11 @@ public class UsrHomeController {
 		return "usr/test/APITest";
 	}
 
-	@RequestMapping("usr/test/timePickerTest")
-	public String timePickerTest(Model model) {
-
-		return "usr/test/timePickerTest";
-	}
-
-	@RequestMapping("usr/test/timePickerResult")
+	@RequestMapping("usr/test/test")
 	@ResponseBody
-	public String timePickerResult(Model model, String selectHour, String selectMinute) {
-		System.out.println(selectHour);
-		System.out.println(selectMinute);
+	public String test(Model model) {
+		testService.process();
+		
 		return "";
 	}
 

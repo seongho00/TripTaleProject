@@ -6,6 +6,17 @@
 body {
 	position: relative;
 }
+
+#timepicker .tui-timepicker {
+	transform: scale(0.6); /* 전체 축소 */
+	width: 130px; /* 최대 너비 */
+	height: auto;
+}
+/* 전체 영역 최소화 */
+#timepicker .tui-timepicker {
+	padding: 0 !important;
+	margin: 0 !important;
+}
 </style>
 <script>
 	let instance;
@@ -68,11 +79,22 @@ body {
 								<div
 									class="flex justify-start items-center flex-grow-0 flex-shrink-0 w-[283px] relative overflow-hidden gap-2.5 px-2.5 pb-px">
 									<div onClick=""
-										class="flex justify-start items-center flex-grow-0 flex-shrink-0 h-[37px] relative overflow-hidden gap-2.5 py-[11px] cursor-pointer">
+										class="relative flex justify-start items-center flex-grow-0 flex-shrink-0 h-[37px] relative overflow-hidden gap-2.5 py-[11px] cursor-pointer">
 										<i class="fa-regular fa-clock flex-grow-0 flex-shrink-0 w-3.5 h-3.5 object-cover"></i>
-										<p class="flex-grow-0 flex-shrink-0 w-[87px] h-[17px] text-[15px] font-medium text-center text-black">10:
-											00 AM</p>
+										<!-- <p class="flex-grow-0 flex-shrink-0 w-[87px] h-[17px] text-[15px] font-medium text-center text-black">10:
+											00 AM</p> -->
+										<div class="absolute top-0 left-0">
+											<form action="../test/timePickerResult" method="get">
+												<input type="hidden" name="selectHour" id="selectedHourInput" />
+												<input type="hidden" name="selectMinute" id="selectedMinuteInput" />
+												<div id="timepicker" class="border-0"></div>
+
+											</form>
+										</div>
+
 									</div>
+
+
 									<p class="flex-grow-0 flex-shrink-0 w-[21px] h-[13px] text-[15px] font-medium text-center text-black">~</p>
 									<div onClick=""
 										class="flex justify-start items-center flex-grow-0 flex-shrink-0 h-[37px] relative overflow-hidden gap-2.5 py-[11px] cursor-pointer">
@@ -100,7 +122,7 @@ body {
 	</div>
 
 </div>
-
+<!-- 
 <div class="selectTime fixed top-0 left-0 w-full h-full z-50 bg-black/40 flex items-center justify-center">
 	<div class="flex-grow-0 flex-shrink-0 w-[701px] h-[439px] relative overflow-hidden flex items-center justify-center">
 		<form action="../test/timePickerResult" method="get">
@@ -108,9 +130,9 @@ body {
 			<input type="hidden" name="selectMinute" id="selectedMinuteInput" />
 			<div id="timepicker"></div>
 
-			<button type="submit">시간 전송</button>
+			<button type="submit">확인</button>
 		</form>
 	</div>
-</div>
+</div> -->
 
 <%@ include file="../common/foot.jspf"%>

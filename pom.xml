@@ -113,7 +113,7 @@
 			<groupId>jakarta.servlet.jsp.jstl</groupId>
 			<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
 		</dependency>
-		
+
 
 		<!-- 카카오 로그인 -->
 		<!-- WebClient 사용을 위한 의존성 (Spring WebFlux 포함) -->
@@ -133,7 +133,12 @@
 			<groupId>io.projectreactor</groupId>
 			<artifactId>reactor-core</artifactId>
 		</dependency>
-
+		<!-- selenium -->
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>4.20.0</version> <!-- 또는 최신 버전 -->
+		</dependency>
 	</dependencies>
 
 
