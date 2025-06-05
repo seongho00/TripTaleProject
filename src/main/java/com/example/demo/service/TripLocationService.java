@@ -1,7 +1,5 @@
 package com.example.demo.service;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
 
@@ -10,15 +8,26 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.repository.TripLocationRepository;
+import com.example.demo.vo.TripLocation;
+
 @Service
-public class TestService {
+public class TripLocationService {
+
+	@Autowired
+	private TripLocationRepository tripLocationRepository;
+
+	public TripLocationService(TripLocationRepository tripLocationRepository) {
+		this.tripLocationRepository = tripLocationRepository;
+	}
 
 	private WebDriver driver;
 
 	public void process(String keyword) {
-
+		keyword = "대전을지병원";
 		String url = "https://map.nave" + "r.com/v5/search/" + keyword;
 		// 크롬 드라이버 세팅 (드라이버 설치 경로 입력)
 		System.setProperty("webdriver.chrome.driver", "C:\\LSH_spring_work\\chromedriver-win64\\chromedriver.exe");
@@ -50,13 +59,14 @@ public class TestService {
 		driver.switchTo().frame(driver.findElement(By.cssSelector("iframe#searchIframe")));
 
 		// 검색 결과 장소 목록을 elements에 담는다.
-		List<WebElement> elements = driver.findElements(By.cssSelector(".ApCpt>.place_bluelink"));
-
-		System.out.println("TestTest**********************************");
-		System.out.println("elements.size() = " + elements.size());
+		try {
+			List<WebElement> elements = driver.findElements(By.cssSelector(".ApCpt>.place_bluelink"));
+			elements.get(0).click();
+		} catch (Exception e) {
+			System.out.println("클릭 못함 ㅇㅇ");
+		}
 
 		// (3) 첫번째 검색결과를 클릭한다.
-		elements.get(0).click();
 
 		// 요소가 로드될 때까지 기다린다.
 		driver.manage().timeouts().implicitlyWait(Duration.ofMillis(500));
@@ -71,6 +81,7 @@ public class TestService {
 		List<WebElement> placeSectionContents = driver.findElements(By.cssSelector(".place_section_content"));
 		WebElement homeElement = placeSectionContents.get(0);
 
+		String schedule = "";
 		// "일정" 버튼 요소를 찾아 클릭한다.
 		try {
 			WebElement scheduleButton = driver.findElement(By.className("vI8SM"));
@@ -79,13 +90,11 @@ public class TestService {
 			List<WebElement> scheduleInfos = driver.findElements(By.className("A_cdD"));
 
 			for (WebElement scheduleInfo : scheduleInfos) {
-
-				System.out.println(scheduleInfo.getText());
+				schedule += scheduleInfo.getText() + "\n";
 			}
-//						WebElement schelduleTitleSpan = driver.findElement(By.className("U7pYf"));
-//						System.out.println(schelduleTitleSpan.getText());
 		} catch (Exception e) {
-			System.out.println(e + "일정 정보 없음");
+			System.out.println("일정 정보 없음");
+			schedule = "일정 정보 없음";
 		}
 
 		// (6) "주소" 버튼 요소를 찾아 클릭한다.
@@ -96,11 +105,11 @@ public class TestService {
 		WebElement addressDiv = driver.findElement(By.className("Y31Sf"));
 
 		List<WebElement> addressInfos = addressDiv.findElements(By.className("nQ7Lh"));
-
+		String address = "";
 		for (WebElement addressInfo : addressInfos) {
 			WebElement addressType = addressInfo.findElement(By.tagName("span"));
-			String address = addressInfo.getText().replace(addressType.getText(), "").trim();
-			System.out.println(addressType.getText() + " : " + address);
+			address = addressInfo.getText().replace(addressType.getText(), "").trim();
+			System.out.println(address);
 		}
 
 		// "이름" 정보가 들어있는 div 요소 찾기
@@ -108,19 +117,40 @@ public class TestService {
 
 		// title div 아래에 있는 span 태그들을 가져와 직접적인 정보 얻기
 		List<WebElement> titleInfos = titleDiv.findElements(By.tagName("span"));
-		System.out.println(titleInfos.get(0).getText());
+		String title = titleInfos.get(0).getText();
+		String number = "";
+		try {
+			// 전화번호 정보가 담겨있는 span 요소 찾기
+			WebElement numberSpan = driver.findElement(By.className("xlx7Q"));
+			number = numberSpan.getText();
 
-		// 전화번호 정보가 담겨있는 span 요소 찾기
-		WebElement numberSpan = driver.findElement(By.className("xlx7Q"));
-		String numberInfo = numberSpan.getText();
-		System.out.println(numberInfo);
+		} catch (Exception e) {
+			System.out.println(e + "번호 정보 없음");
+			number = "번호 정보 없음";
+		}
 
 		// 별점 정보가 담겨있는 span 요소찾기
 		WebElement starSpan = driver.findElement(By.className("LXIwF"));
 		WebElement starType = starSpan.findElement(By.tagName("span"));
-		String starInfo = starSpan.getText().replace(starType.getText(), "").trim();
-		System.out.println(starInfo);
+		String star = starSpan.getText().replace(starType.getText(), "").trim();
 
+		// 소개글 정보 span 요소 찾기
+		List<WebElement> profileSpans = driver.findElements(By.className("veBoZ"));
+		String profile = "";
+		try {
+			for (WebElement profileSpan : profileSpans) {
+				String text = profileSpan.getText();
+				if (text.equals("정보")) {
+					profileSpan.click();
+					profile = driver.findElement(By.className("T8RFa")).getText();
+				}
+			}
+		} catch (Exception e) {
+			System.out.println(e + "소개글 정보 없음");
+			profile = "소개글 정보 없음";
+		}
+
+		tripLocationRepository.insertData(title, profile, address, number, schedule, star);
 	}
 
 }

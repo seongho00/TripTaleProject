@@ -82,9 +82,6 @@ public class UsrPlannerController {
 	@RequestMapping("usr/planner/region")
 	public String region(Model model) {
 
-//		List<RegionImage> regionImages = regionImageService.getRegionImage();
-//
-//		model.addAttribute("regionImages", regionImages);
 		return "usr/planner/region";
 	}
 	

@@ -77,6 +77,7 @@ function getAddressFromCoords(lat, lon) {
 					console.log(item.mapy ,item.mapx);
 					/* 
 					getAddressFromCoords(item.mapy,item.mapx); */
+					await sleep(10000);
 				  });
 
 		} catch (e) {

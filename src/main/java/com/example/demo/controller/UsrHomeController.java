@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.TripTaleProjectApplication;
 import com.example.demo.service.ArticleService;
 import com.example.demo.service.KakaoOAuthService;
-import com.example.demo.service.TestService;
+import com.example.demo.service.TripLocationService;
 import com.example.demo.vo.Rq;
 
 @Controller
@@ -24,7 +24,7 @@ public class UsrHomeController {
 	@Autowired
 	Rq rq;
 	@Autowired
-	private TestService testService;
+	private TripLocationService tripLocationService;
 
 	UsrHomeController(TripTaleProjectApplication tripTaleProjectApplication) {
 		this.tripTaleProjectApplication = tripTaleProjectApplication;
@@ -63,7 +63,7 @@ public class UsrHomeController {
 
 	@RequestMapping("usr/test/testService")
 	public String testService(Model model, String keyword) {
-		testService.process(keyword);
+		tripLocationService.process(keyword);
 		return "실행잘됨 ㅇㅇ";
 	}
 
