@@ -9,6 +9,6 @@ import com.example.demo.vo.RegionImage;
 @Mapper
 public interface RegionImageRepository {
 
-	public List<RegionImage> getRegionImage();
+
 
 }

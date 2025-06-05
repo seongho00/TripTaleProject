@@ -8,4 +8,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface TripLocationRepository {
 	public void insertData(String title, String profile, String address, String number, String schedule,
 			String star);
+
+	public int getLastInsertId();
 }

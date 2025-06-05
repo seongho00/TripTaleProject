@@ -8,7 +8,9 @@
 
 	<select id="insertData" parameterType="map">
 		INSERT INTO tripLocation
-		SET locationName = #{title},
+		SET regDate = NOW(),
+		updateDate = NOW(),
+		locationName = #{title},
 		locationTypeId = 1,
 		address = #{address},
 		`schedule` = #{schedule},
@@ -17,4 +19,8 @@
 		star = #{star};
 	</select>
 
+	<select id="getLastInsertId" parameterType="int">
+		SELECT
+		LAST_INSERT_ID()
+	</select>
 </mapper>

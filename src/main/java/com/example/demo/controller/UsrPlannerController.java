@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.TripTaleProjectApplication;
-import com.example.demo.service.RegionImageService;
 import com.example.demo.vo.Rq;
 
 @Controller
@@ -23,8 +22,7 @@ public class UsrPlannerController {
 
 	@Autowired
 	Rq rq;
-	@Autowired
-	private RegionImageService regionImageService;
+
 
 	UsrPlannerController(TripTaleProjectApplication tripTaleProjectApplication) {
 		this.tripTaleProjectApplication = tripTaleProjectApplication;

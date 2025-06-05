@@ -11,17 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TripLocation {
+public class TripLocationPicture {
 
 	private int id;
 	private String regDate;
 	private String updateDate;
-	private String locationName;
-	private int locationTypeId;
-	private String address;
-	private String scheduleInfo;
-	private String numberInfo;
-	private String profile;
-	private String star;
+	private String pictureUrl;
+	private int tripLocationId;
 
 }

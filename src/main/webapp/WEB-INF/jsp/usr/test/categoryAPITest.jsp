@@ -71,14 +71,16 @@ function getAddressFromCoords(lat, lon) {
 			response.json();
 			 
 			const datas = data.response.body.items.item;
-			getAddressFromCoords(37.5785335900, 126.9886864194);
-	/* 		for (const [index, item] of datas.entries()) {
+			
+			
+			await getAddressFromCoords(37.5599855058, 126.9752992762);
+	 		/* for (const [index, item] of datas.entries()) {
 				console.log(index + "번 째 데이터");
 				console.log(item.mapy, item.mapx);
 				
 				await getAddressFromCoords(item.mapy, item.mapx);
 				await sleep(15000); // 15초 대기
-			} */
+			}  */
 
 		} catch (e) {
 			console.error("API 호출 실패:", e);

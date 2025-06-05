@@ -13,6 +13,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.repository.TripLocationPictureRepository;
 import com.example.demo.repository.TripLocationRepository;
 
 @Service
@@ -22,6 +23,8 @@ public class TripLocationService {
 
 	@Autowired
 	private TripLocationRepository tripLocationRepository;
+	@Autowired
+	private TripLocationPictureRepository tripLocationPictureRepository;
 
 	public TripLocationService(TripLocationRepository tripLocationRepository, KakaoOAuthService kakaoOAuthService) {
 		this.tripLocationRepository = tripLocationRepository;
@@ -74,8 +77,6 @@ public class TripLocationService {
 			// 현재 프레임에서 상위 프레임으로 이동한다.
 			driver.switchTo().defaultContent();
 
-			
-
 		} catch (Exception e) {
 			List<WebElement> buttonDivs = driver.findElements(By.className("end_inner"));
 			for (WebElement buttonDiv : buttonDivs) {
@@ -89,6 +90,15 @@ public class TripLocationService {
 			}
 
 		}
+
+		driver.switchTo().defaultContent();
+
+		driver.manage().timeouts().implicitlyWait(Duration.ofMillis(3000));
+		// (4) 상세정보가 나오는 프레임으로 이동한다.
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		WebElement iframe = wait
+				.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("iframe#entryIframe")));
+		driver.switchTo().frame(iframe);
 
 		String schedule = "";
 
@@ -106,12 +116,8 @@ public class TripLocationService {
 			System.out.println("일정 정보 없음");
 			schedule = "일정 정보 없음";
 		}
-		driver.manage().timeouts().implicitlyWait(Duration.ofMillis(3000));
-		// (4) 상세정보가 나오는 프레임으로 이동한다.
-		driver.switchTo().frame(driver.findElement(By.cssSelector("iframe#entryIframe")));
 
-		// (6) 로딩될때까지 기다렸다가 "주소" 버튼 요소를 찾아 클릭한다. 
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		// (6) 로딩될때까지 기다렸다가 "주소" 버튼 요소를 찾아 클릭한다.
 		WebElement addressButton = wait.until(ExpectedConditions.presenceOfElementLocated(By.className("LDgIH")));
 		addressButton.click();
 
@@ -169,6 +175,31 @@ public class TripLocationService {
 			profile = "소개글 정보 없음";
 		}
 		tripLocationRepository.insertData(title, profile, address, number, schedule, star);
+		int id = tripLocationRepository.getLastInsertId();
+
+		// 사진 정보 요소 찾기 (6개정도)
+		try {
+			for (WebElement profileSpan : profileSpans) {
+				String text = profileSpan.getText();
+				if (text.equals("사진")) {
+					profileSpan.click();
+					WebElement photoDiv = driver.findElement(By.className("Nd2nM"));
+					List<WebElement> photos = photoDiv.findElements(By.className("place_thumb"));
+					int count = photos.size() > 6 ? 6 : photos.size();
+
+					for (int i = 0; i < count; i++) {
+						WebElement photoImg = photos.get(i).findElement(By.tagName("img"));
+					    String photoUrl = photoImg.getAttribute("src");
+						tripLocationPictureRepository.insertPicture(photoUrl, id);
+
+					}
+				}
+			}
+		} catch (Exception e) {
+			System.out.println(e + "사진 정보 없음");
+			profile = "사진 정보 없음";
+		}
+
 	}
 
 }
