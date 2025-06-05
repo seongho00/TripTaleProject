@@ -2,6 +2,31 @@ DROP DATABASE IF EXISTS `TripTale_project`;
 CREATE DATABASE `TripTale_project`;
 USE `TripTale_project`;
 
+# 게시글 테이블 생성
+CREATE TABLE `member` (
+	id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	loginId VARCHAR(30) NOT NULL,
+	loginPw VARCHAR(50) NOT NULL,
+	`name` VARCHAR(20) NOT NULL,
+	email VARCHAR(30) NOT NULL,
+	delStatus TINYINT(1) NOT NULL DEFAULT 0,
+	delDate DATETIME,
+	authLevel SMALLINT(2) NOT NULL DEFAULT 7
+	
+);
+
+
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate = NOW(),
+loginId = 'test1',
+loginPw = 'test1',
+`name` = '이름1',
+email = 'tjoadg@gmail.com';
+
+# 여행 테이블 생성
 CREATE TABLE TripInfo (
 	id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	regDate DATETIME NOT NULL,
@@ -13,6 +38,7 @@ CREATE TABLE TripInfo (
 	memberId INT(10) NOT NULL
 );
 
+# 여행 테이블 테스트데이터
 INSERT INTO TripInfo
 SET regDate = NOW(),
 updateDate = NOW(),
@@ -38,86 +64,62 @@ tripStartDate = '2025-06-06T18:00:00',
 tripEndDate = '2025-06-10T22:00:00'
 WHERE id = 1 AND memberId = 1;
 
-
-CREATE TABLE RegionImage (
-	id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	regionName CHAR(30) NOT NULL,
-	url TEXT NOT NULL
+# 여행 테이블 생성
+CREATE TABLE tripLocation (
+	id	INT(10)	UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	locationName	VARCHAR(50)	NOT NULL,
+	locationTypeId	INT(10)	NOT NULL,
+	address	VARCHAR(200)	NOT NULL,
+	`schedule`	TEXT	NULL,
+	`number`	VARCHAR(20)	NULL,
+	`profile`	TEXT	NULL,
+	star VARCHAR(20)	NOT NULL,
+	reviewCount INT(10) NOT NULL
 );
 
-INSERT INTO RegionImage
-SET regionName = '서울',
-url = 'http://tong.visitkorea.or.kr/cms/resource/29/2678629_image2_1.jpg';
-
-INSERT INTO RegionImage
-SET regionName = '인천',
-url = 'http://tong.visitkorea.or.kr/cms/resource/03/2599103_image2_1.jpg';
-
-INSERT INTO RegionImage
-SET regionName = '대전',
-url = 'http://tong.visitkorea.or.kr/cms/resource/68/3350768_image2_1.jpg';
-
-INSERT INTO RegionImage
-SET regionName = '대구',
-url = 'http://tong.visitkorea.or.kr/cms/resource/43/1573743_image2_1.jpg';
-
-INSERT INTO RegionImage
-SET regionName = '광주',
-url = 'http://tong.visitkorea.or.kr/cms/resource/48/3083348_image2_1.jpg';
-
-INSERT INTO RegionImage
-SET regionName = '부산',
-url = 'http://tong.visitkorea.or.kr/cms/resource/15/1974215_image2_1.jpg';
-
-INSERT INTO RegionImage
-SET regionName = '울산',
-url = 'http://tong.visitkorea.or.kr/cms/resource/81/2712581_image2_1.jpg';
-
-INSERT INTO RegionImage
-SET regionName = '세종',
-url = 'http://tong.visitkorea.or.kr/cms/resource/70/3353970_image2_1.jpg';
-
-INSERT INTO RegionImage
-SET regionName = '경기',
-url = 'http://tong.visitkorea.or.kr/cms/resource/08/2943208_image2_1.jpg';
-
-INSERT INTO RegionImage
-SET regionName = '강원',
-url = 'http://tong.visitkorea.or.kr/cms/resource/55/3492855_image2_1.jpg';
-
-INSERT INTO RegionImage
-SET regionName = '충북',
-url = 'http://tong.visitkorea.or.kr/cms/resource/71/3494971_image2_1.jpg';
-
-INSERT INTO RegionImage
-SET regionName = '충남',
-url = 'http://tong.visitkorea.or.kr/cms/resource/62/2797962_image2_1.jpg';
-
-INSERT INTO RegionImage
-SET regionName = '경북',
-url = 'http://tong.visitkorea.or.kr/cms/resource/52/1567752_image2_1.jpg';
-
-INSERT INTO RegionImage
-SET regionName = '경남',
-url = 'http://tong.visitkorea.or.kr/cms/resource/53/3083353_image2_1.jpg';
-
-INSERT INTO RegionImage
-SET regionName = '전북',
-url = 'http://tong.visitkorea.or.kr/cms/resource/40/3358040_image2_1.JPG';
-
-INSERT INTO RegionImage
-SET regionName = '전남',
-url = 'http://tong.visitkorea.or.kr/cms/resource/92/2653892_image2_1.jpg';
-
-INSERT INTO RegionImage
-SET regionName = '제주',
-url = 'http://tong.visitkorea.or.kr/cms/resource/93/1876193_image2_1.jpg';
+INSERT INTO tripLocation
+SET regDate = NOW(),
+updateDate = NOW(),
+locationName = '서서울호수공원',
+locationTypeId = 1,
+address = '서울 양천구 남부순환로64길 26 신월야구장',
+`schedule` = '월',
+`number` = '02-2604-3004',
+`profile` = '소개 정보 없음',
+star = '4.16',
+reviewCount = 100;
 
 
+# 여행 테이블 생성
+CREATE TABLE tripLocationPicture (
+	id	INT(10)	UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	pictureUrl TEXT NOT NULL,
+	tripLocationId INT(10) NOT NULL
+);
 
-select *
-from TripInfo;
+INSERT INTO tripLocationPicture
+SET regDate = NOW(),
+updateDate = NOW(),
+pictureUrl = 'asfjoseg',
+tripLocationId = 1;
 
-select *
-from RegionImage;
 
+SELECT *
+FROM article
+
+SELECT *
+FROM `member`
+
+SELECT *
+FROM tripLocation
+
+SELECT *
+FROM tripLocationPicture
+
+SELECT *
+FROM `member`
+WHERE loginId ='test1'

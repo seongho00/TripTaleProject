@@ -73,7 +73,7 @@ function getAddressFromCoords(lat, lon) {
 			const datas = data.response.body.items.item;
 			
 			
-			getAddressFromCoords(37.5756364926 , 126.9768570246);
+			getAddressFromCoords(37.5756364926 ,126.9768570246);
 	 		/*  for (const [index, item] of datas.entries()) {
 				console.log(index + "번 째 데이터");
 				console.log(item.mapy, item.mapx);
