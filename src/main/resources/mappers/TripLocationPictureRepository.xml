@@ -12,7 +12,8 @@
 		SET regDate = NOW(),
 		updateDate = NOW(),
 		pictureUrl = #{pictureUrl},
-		tripLocationId = #{id};
+		tripLocationId = #{id}
+		
 	</select>
 
 

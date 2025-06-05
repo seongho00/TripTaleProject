@@ -121,16 +121,9 @@ public class TripLocationService {
 		WebElement addressButton = wait.until(ExpectedConditions.presenceOfElementLocated(By.className("LDgIH")));
 		addressButton.click();
 
-		// (7) "도로명"과 "지번" 정보가 들어있는 div 요소를 찾아서, 해당 정보를 가져온다.
-		WebElement addressDiv = driver.findElement(By.className("Y31Sf"));
-
-		List<WebElement> addressInfos = addressDiv.findElements(By.className("nQ7Lh"));
-		String address = "";
-		for (WebElement addressInfo : addressInfos) {
-			WebElement addressType = addressInfo.findElement(By.tagName("span"));
-			address = addressInfo.getText().replace(addressType.getText(), "").trim();
-			System.out.println(address);
-		}
+		// (7) 주소 정보가 들어있는 div 요소를 찾아서, 해당 정보를 가져온다.
+		WebElement addressSpan = driver.findElement(By.className("LDgIH"));
+		String address = addressSpan.getText();
 
 		// "이름" 정보가 들어있는 div 요소 찾기
 		WebElement titleDiv = driver.findElement(By.className("LylZZ"));
@@ -145,7 +138,7 @@ public class TripLocationService {
 			number = numberSpan.getText();
 
 		} catch (Exception e) {
-			System.out.println(e + "번호 정보 없음");
+			System.out.println("번호 정보 없음");
 			number = "번호 정보 없음";
 		}
 
@@ -156,7 +149,31 @@ public class TripLocationService {
 			WebElement starType = starSpan.findElement(By.tagName("span"));
 			star = starSpan.getText().replace(starType.getText(), "").trim();
 		} catch (Exception e) {
+			System.out.println("별점 정보 없음");
 			star = "별점 정보 없음";
+		}
+		int reviewCount = 0;
+		// 리뷰 정보가 담겨있는 span 요소찾기
+		try {
+			List<WebElement> reviewSpans = driver.findElements(By.className("PXMot"));
+			int visitReviewCount = 0;
+			int vlogReviewCount = 0;
+			for (WebElement reviewSpan : reviewSpans) {
+				
+				if (reviewSpan.getText().contains("방문자 리뷰")) {
+					String visitReview = reviewSpan.getText().replace("방문자 리뷰", "").trim();
+					visitReviewCount = Integer.parseInt(visitReview.replace(",", ""));
+				} else if (reviewSpan.getText().contains("블로그 리뷰")) {
+					String vlogReview = reviewSpan.getText().replace("블로그 리뷰", "").trim();
+					vlogReviewCount = Integer.parseInt(vlogReview.replace(",", ""));
+				}
+			}
+			
+			reviewCount = visitReviewCount + vlogReviewCount;
+
+		} catch (Exception e) {
+			System.out.println("리뷰 정보 없음");
+			reviewCount = 0;
 		}
 
 		// 소개글 정보 span 요소 찾기
@@ -174,7 +191,7 @@ public class TripLocationService {
 			System.out.println(e + "소개글 정보 없음");
 			profile = "소개글 정보 없음";
 		}
-		tripLocationRepository.insertData(title, profile, address, number, schedule, star);
+		tripLocationRepository.insertData(title, profile, address, number, schedule, star, reviewCount);
 		int id = tripLocationRepository.getLastInsertId();
 
 		// 사진 정보 요소 찾기 (6개정도)
@@ -189,7 +206,7 @@ public class TripLocationService {
 
 					for (int i = 0; i < count; i++) {
 						WebElement photoImg = photos.get(i).findElement(By.tagName("img"));
-					    String photoUrl = photoImg.getAttribute("src");
+						String photoUrl = photoImg.getAttribute("src");
 						tripLocationPictureRepository.insertPicture(photoUrl, id);
 
 					}

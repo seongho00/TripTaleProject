@@ -16,7 +16,8 @@
 		`schedule` = #{schedule},
 		`number` = #{number},
 		`profile` = #{profile},
-		star = #{star};
+		star = #{star},
+		reviewCount = #{reviewCount}
 	</select>
 
 	<select id="getLastInsertId" parameterType="int">

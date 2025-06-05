@@ -23,5 +23,6 @@ public class TripLocation {
 	private String numberInfo;
 	private String profile;
 	private String star;
+	private int reviewCount;
 
 }
