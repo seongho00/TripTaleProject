@@ -7,6 +7,9 @@
 
 
 <script>
+function sleep(ms) {
+	  return new Promise(resolve => setTimeout(resolve, ms));
+	}
 function getAddressFromCoords(lat, lon) {
     const url = "https://apis.openapi.sk.com/tmap/geo/reversegeocoding?version=1&lat="+ lat +"&lon="+ lon +"&coordType=WGS84GEO&addressType=A10";
 
@@ -25,20 +28,17 @@ function getAddressFromCoords(lat, lon) {
               	console.log("주소:", secondPart);
                 
               	 $.ajax({
-                     type: "POST",
-                     url: "/usr/test/testService", // ❗ 변경 필요
+                     type: "GET",
+                     url: "/usr/test/tripLocationService",
                      data: { keyword: secondPart },
                      success: function (response) {
-                       console.log("서버 응답:", response);
+                       	console.log("서버 응답:", response);
                      },
                      error: function (xhr, status, error) {
-                       console.error("서버 전송 실패:", error);
+                    	
+                     	console.error("서버 전송 실패:", error);
                      }
                    });
-                 
-                
-                
-                
                 
         	} catch (e){
         		console.error("주소 파싱 중 오류 발생:", e);
@@ -69,16 +69,16 @@ function getAddressFromCoords(lat, lon) {
 			}
 			const data = await
 			response.json();
-
-
+			 
 			const datas = data.response.body.items.item;
-			getAddressFromCoords(37.5760725520,126.9768042386 );
-			datas.forEach((item, index) => {
-					console.log(item.mapy ,item.mapx);
-					/* 
-					getAddressFromCoords(item.mapy,item.mapx); */
-					await sleep(10000);
-				  });
+			getAddressFromCoords(37.5785335900, 126.9886864194);
+	/* 		for (const [index, item] of datas.entries()) {
+				console.log(index + "번 째 데이터");
+				console.log(item.mapy, item.mapx);
+				
+				await getAddressFromCoords(item.mapy, item.mapx);
+				await sleep(15000); // 15초 대기
+			} */
 
 		} catch (e) {
 			console.error("API 호출 실패:", e);

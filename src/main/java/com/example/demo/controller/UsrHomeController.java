@@ -61,8 +61,9 @@ public class UsrHomeController {
 		return "usr/test/Tmap";
 	}
 
-	@RequestMapping("usr/test/testService")
-	public String testService(Model model, String keyword) {
+	@RequestMapping("usr/test/tripLocationService")
+	@ResponseBody
+	public String tripLocationService(Model model, String keyword) {
 		tripLocationService.process(keyword);
 		return "실행잘됨 ㅇㅇ";
 	}
