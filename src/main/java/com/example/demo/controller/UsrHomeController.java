@@ -55,12 +55,10 @@ public class UsrHomeController {
 		return "usr/test/APITest";
 	}
 
-	@RequestMapping("usr/test/test")
-	@ResponseBody
-	public String test(Model model) {
-		testService.process();
+	@RequestMapping("usr/test/Tmap")
+	public String Tmap(Model model) {
 
-		return "";
+		return "usr/test/Tmap";
 	}
 
 	@RequestMapping("usr/test/categoryAPITest")

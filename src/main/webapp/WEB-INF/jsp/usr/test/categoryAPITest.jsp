@@ -7,22 +7,39 @@
 
 
 <script>
-	function coordToAddress (mapX, mapY){
-		$.ajax({
-		      url: "/usr/test/coordToAddress",
-		      method: "POST",
-		      data: {
-		    	mapX: mapX,
-		    	mapY: mapY
-		      },
-		      success: function(response) {
-		        console.log("✅ 서버 응답:", response);
-		      },
-		      error: function(xhr, status, error) {
-		        console.error("❌ 요청 실패:", status, error);
-		      }
-		    });
-	}
+function getAddressFromCoords(lat, lon) {
+    const url = "https://apis.openapi.sk.com/tmap/geo/reversegeocoding?version=1&lat="+ lat +"&lon="+ lon +"&coordType=WGS84GEO&addressType=A10";
+
+    fetch(url, {
+      headers: {
+        "appKey": "JtTmUgD4yw9LrbRlREh2B8dYadiOogkRQNM0SdBj"
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.addressInfo) {
+        	try{
+            	const fullAddress = data.addressInfo.fullAddress; // 전체 주소 문자열
+                const parts = fullAddress.split(","); // 공백 기준으로 분리
+                const secondPart = parts[2]; // 두 번째 요소 (index는 0부터 시작)
+              	console.log("주소:", secondPart);
+        	} catch (e){
+        		console.error("주소 파싱 중 오류 발생:", e);
+        	}
+        } else {
+          console.warn("주소 정보를 가져올 수 없습니다.");
+        }
+      })
+      .catch(err => {
+        console.error("API 호출 오류:", err);
+      });
+  }
+
+  // 사용 예시:
+  getAddressFromCoords(37.5071013134, 127.0494329104);
+  
+  
+  
 	const API_KEY = 'CtMWbR%2BmYCIwYQmPYdFuMiP4LsJ6aVV3CcbyZUXI5bGiblyS1OilOVAYopA9VxwIcRyQ7pT%2FADS7FzuMVs3uEw%3D%3D'; // Encoding된 키
 
 	async function getAirData() {
@@ -43,8 +60,10 @@
 
 
 			const datas = data.response.body.items.item;
+		
+			
 			datas.forEach((item, index) => {
-					coordToAddress(item.mapx, item.mapy);
+					getAddressFromCoords(item.mapy,item.mapx);
 				  });
 
 		} catch (e) {
