@@ -23,6 +23,23 @@ function getAddressFromCoords(lat, lon) {
                 const parts = fullAddress.split(","); // 공백 기준으로 분리
                 const secondPart = parts[2]; // 두 번째 요소 (index는 0부터 시작)
               	console.log("주소:", secondPart);
+                
+              	 $.ajax({
+                     type: "POST",
+                     url: "/usr/test/testService", // ❗ 변경 필요
+                     data: { keyword: secondPart },
+                     success: function (response) {
+                       console.log("서버 응답:", response);
+                     },
+                     error: function (xhr, status, error) {
+                       console.error("서버 전송 실패:", error);
+                     }
+                   });
+                 
+                
+                
+                
+                
         	} catch (e){
         		console.error("주소 파싱 중 오류 발생:", e);
         	}
@@ -33,12 +50,7 @@ function getAddressFromCoords(lat, lon) {
       .catch(err => {
         console.error("API 호출 오류:", err);
       });
-  }
-
-  // 사용 예시:
-  getAddressFromCoords(37.5071013134, 127.0494329104);
-  
-  
+  }  
   
 	const API_KEY = 'CtMWbR%2BmYCIwYQmPYdFuMiP4LsJ6aVV3CcbyZUXI5bGiblyS1OilOVAYopA9VxwIcRyQ7pT%2FADS7FzuMVs3uEw%3D%3D'; // Encoding된 키
 
@@ -60,10 +72,11 @@ function getAddressFromCoords(lat, lon) {
 
 
 			const datas = data.response.body.items.item;
-		
-			
+			getAddressFromCoords(37.5760725520,126.9768042386 );
 			datas.forEach((item, index) => {
-					getAddressFromCoords(item.mapy,item.mapx);
+					console.log(item.mapy ,item.mapx);
+					/* 
+					getAddressFromCoords(item.mapy,item.mapx); */
 				  });
 
 		} catch (e) {
