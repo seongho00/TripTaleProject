@@ -40,7 +40,8 @@ public class TripLocationService {
 
 		ChromeOptions options = new ChromeOptions();
 		options.addArguments("--remote-allow-origins=*");
-
+		options.addArguments("--headless");
+		
 		// 브라우저 선택
 		driver = new ChromeDriver(options);
 		driver.get("https://www.google.com");
